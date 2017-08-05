@@ -1,0 +1,4 @@
+export PATH=../000-getbinaries/bin/:$PATH
+configtxgen -profile ComposerOrdererGenesis -channelID composerchannel -inspectBlock ./composer-genesis.block
+configtxgen -profile ComposerOrdererGenesis -channelID composerchannel -inspectChannelCreateTx ./composer-channel.tx
+
