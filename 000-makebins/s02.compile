@@ -1,0 +1,11 @@
+#!/bin/bash
+set -e
+source ../confparams.sh
+result=0
+
+cd ../$FSS_FABRIC_ROOT
+make clean-all
+make release
+
+exit $result 
+ 

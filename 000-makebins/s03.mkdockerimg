@@ -1,0 +1,16 @@
+#!/bin/bash
+set -e
+source ../confparams.sh
+source ../commonfun.sh
+result=0
+
+cd ../$FSS_FABRIC_ROOT
+e_is_set=${-//[^x]/}
+set +e
+_rmi
+if [[ -n "$e_is_set" ]]; then set -e; else set +e; fi
+make docker-clean
+make docker
+
+exit $result 
+ 

@@ -1,0 +1,25 @@
+cp -r ../001-generatecrypto/fabric-peer-config/users/Admin@org1.foo.com .
+
+SI=`basename Admin@org1.foo.com/msp/keystore/*_sk | sed 's/_sk$//'`
+echo "### signingIdentity = " $SI
+
+### get private key
+cp -p Admin@org1.foo.com/msp/keystore/${SI}_sk Admin@org1.foo.com/${SI}-priv
+echo "### private key : " Admin@org1.foo.com/${SI}-priv
+openssl ec -in Admin@org1.foo.com/${SI}-priv -noout -text
+
+
+### get public key
+openssl x509 -pubkey -in Admin@org1.foo.com/msp/signcerts/Admin@org1.foo.com-cert.pem -noout > Admin@org1.foo.com/${SI}-pub
+echo "### public key : " Admin@org1.foo.com/${SI}-pub
+openssl ec -pubin -in  Admin@org1.foo.com/8dc7cde30d2659e07843e44ea0431caa1a9dd6eb4b635d231131c55aac9acb84-pub -noout -text
+
+
+### create def
+CERT=`cat Admin@org1.foo.com/msp/signcerts/Admin@org1.foo.com-cert.pem | while read LINE; do echo $LINE"\n"; done | tr -d '\n'`
+echo '{"name":"Admin","mspid":"Org1MSP","roles":null,"affiliation":"","enrollmentSecret":"","enrollment":{"signingIdentity":"'${SI}'","identity":{"certificate":"'${CERT}'"}}}' > Admin@org1.foo.com/Admin
+cat Admin@org1.foo.com/Admin | jq
+cat Admin@org1.foo.com/Admin | jq ".enrollment.identity.certificate" | sed 's/\\n/\n/g' | sed 's/^"//g' | openssl x509 -noout -text
+
+### copy credentials
+

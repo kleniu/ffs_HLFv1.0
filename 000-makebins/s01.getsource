@@ -1,0 +1,15 @@
+#!/bin/bash
+set -e
+source ../confparams.sh
+result=0
+
+cd ../$FFS_FABRIC_SOURCE
+if [ -d fabric ]; then
+	cd ../../$FSS_FABRIC_ROOT
+	git pull
+else
+	git clone $FSS_FABRIC_GIT
+	cd ../../$FSS_FABRIC_ROOT 
+fi
+
+exit $result 

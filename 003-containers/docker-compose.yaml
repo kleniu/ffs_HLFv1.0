@@ -5,15 +5,16 @@ services:
     image: hyperledger/fabric-ca:x86_64-1.0.0
     container_name: ca.org1.foo.com
     environment:
-#      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
-      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server-config
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+#      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server-config
       - FABRIC_CA_SERVER_CA_NAME=ca.org1.foo.com
 #      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/org1.foo.com-cert.pem
 #      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/a22daf356b2aab5792ea53e35f66fccef1d7f1aa2b3a2b92dbfbf96a448ea26a_sk
 
     ports:
       - "7054:7054"
-    command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.org1.foo.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/../001-generatecrypto/fabric-ca-config/53e84bdfcb489e9462af4bbf6dfe7cc36f19f45d549a52bf6aa557139150eeb9_sk -b admin:adminpw -d'
+    # ls -la ../001-generatecrypto/fabric-ca-config/
+    command: sh -c 'fabric-ca-server start --ca.certfile /etc/hyperledger/fabric-ca-server-config/ca.org1.foo.com-cert.pem --ca.keyfile /etc/hyperledger/fabric-ca-server-config/03303662df971240c18263ee2444703d22c55084cf7c63c4b4f1a4f4b2d0ddc2_sk -b admin:adminpw -d'
     volumes:
       - ../001-generatecrypto/fabric-ca-config/:/etc/hyperledger/fabric-ca-server-config
 

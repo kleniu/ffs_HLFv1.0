@@ -2,3 +2,4 @@
 */*.bna
 logs
 */composer-logs
+*/source
