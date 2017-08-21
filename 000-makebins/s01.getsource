@@ -3,6 +3,7 @@ set -e
 source ../confparams.sh
 result=0
 
+test -d ../$FFS_FABRIC_SOURCE || mkdir ../$FFS_FABRIC_SOURCE
 cd ../$FFS_FABRIC_SOURCE
 if [ -d fabric ]; then
 	cd ../../$FSS_FABRIC_ROOT
