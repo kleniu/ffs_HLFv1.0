@@ -4,7 +4,7 @@ source ../confparams.sh
 source ../commonfun.sh
 result=0
 
-cd ../$FSS_FABRIC_ROOT
+cd ../$FFS_FABRIC_ROOT
 e_is_set=${-//[^x]/}
 set +e
 _rmi

@@ -1,0 +1,114 @@
+#!/bin/bash
+set -e
+source ../confparams.sh
+result=0
+
+TXGEN_CONFIG=./configtx.yaml
+
+echo -e "${FFS_YEL} Creating $TXGEN_CONFIG file using following settings${FFS_NOC}"
+echo "FFS_ORGS        = "$FFS_ORGS
+echo "FFS_ORG_NODES   = "$FFS_ORG_NODES
+echo "FFS_DOMAIN      = "$FFS_DOMAIN
+
+
+echo "Organizations:" > $TXGEN_CONFIG
+i=1
+while [[ $i -le $FFS_ORGS ]]; do
+	echo "    - &OrdererOrg${i}" >> $TXGEN_CONFIG
+	echo "        Name: OrdererOrg${i}MSP" >> $TXGEN_CONFIG
+	echo "        ID: OrdererOrg${i}MSP" >> $TXGEN_CONFIG
+	echo "        MSPDir: crypto-config/ordererOrganizations/org${i}.${FFS_DOMAIN}/msp" >> $TXGEN_CONFIG 
+	echo "" >> $TXGEN_CONFIG
+        (( i = i + 1 ))
+done
+
+i=1
+while [[ $i -le $FFS_ORGS ]]; do
+	echo "    - &PeerOrg${i}" >> $TXGEN_CONFIG 
+	echo "        Name: PeerOrg${i}MSP" >> $TXGEN_CONFIG
+	echo "        ID: PeerOrg${i}MSP" >> $TXGEN_CONFIG
+	echo "        MSPDir: crypto-config/peerOrganizations/org${i}.${FFS_DOMAIN}/msp" >> $TXGEN_CONFIG
+	echo "        AnchorPeers:" >> $TXGEN_CONFIG
+	j=0
+	while [[ $j -lt $FFS_ORG_NODES ]]; do
+		echo "            - Host: peer${j}.org${i}.${FFS_DOMAIN}" >> $TXGEN_CONFIG
+		echo "              Port: 7051" >> $TXGEN_CONFIG
+		(( j = j + 1 ))
+	done
+	echo "" >> $TXGEN_CONFIG 
+        (( i = i + 1 ))
+done
+
+
+echo "Orderer: &OrdererDefaults" >> $TXGEN_CONFIG
+echo "    OrdererType: kafka" >> $TXGEN_CONFIG
+echo "    Addresses:" >> $TXGEN_CONFIG
+
+i=1
+while [[ $i -le $FFS_ORGS ]]; do
+	j=0
+	while [[ $j -lt $FFS_ORG_NODES ]]; do
+		echo "        - orderer${j}.org${i}.${FFS_DOMAIN}:7050" >> $TXGEN_CONFIG
+		(( j = j + 1 ))
+	done
+        (( i = i + 1 ))
+done
+
+echo "    BatchTimeout: 2s" >> $TXGEN_CONFIG
+echo "    BatchSize:" >> $TXGEN_CONFIG
+echo "        MaxMessageCount: 10" >> $TXGEN_CONFIG
+echo "        AbsoluteMaxBytes: 98 MB" >> $TXGEN_CONFIG
+echo "        PreferredMaxBytes: 512 KB" >> $TXGEN_CONFIG
+echo "    Kafka:" >> $TXGEN_CONFIG
+echo "        Brokers:" >> $TXGEN_CONFIG
+echo "            - kafka0:9092" >> $TXGEN_CONFIG
+echo "            - kafka1:9092" >> $TXGEN_CONFIG
+echo "            - kafka2:9092" >> $TXGEN_CONFIG
+echo "            - kafka3:9092" >> $TXGEN_CONFIG
+echo "    Organizations:" >> $TXGEN_CONFIG
+echo "" >> $TXGEN_CONFIG
+echo "Application: &ApplicationDefaults" >> $TXGEN_CONFIG
+echo "    Organizations:" >> $TXGEN_CONFIG
+echo "" >> $TXGEN_CONFIG
+echo "Profiles:" >> $TXGEN_CONFIG
+echo "    OrdererGenesis:" >> $TXGEN_CONFIG
+echo "        Orderer:" >> $TXGEN_CONFIG
+echo "            <<: *OrdererDefaults" >> $TXGEN_CONFIG
+echo "            Organizations:" >> $TXGEN_CONFIG
+
+
+i=1
+while [[ $i -le $FFS_ORGS ]]; do
+	echo "                - *OrdererOrg${i}" >> $TXGEN_CONFIG
+	(( i = i + 1 ))
+done
+
+echo "        Consortiums:" >> $TXGEN_CONFIG
+echo "            SampleConsortium:" >> $TXGEN_CONFIG
+echo "                Organizations:" >> $TXGEN_CONFIG
+
+i=1
+while [[ $i -le $FFS_ORGS ]]; do
+	echo "                    - *PeerOrg${i}" >> $TXGEN_CONFIG
+	(( i = i + 1 ))
+done
+
+echo "    Channel:" >> $TXGEN_CONFIG
+echo "        Consortium: SampleConsortium" >> $TXGEN_CONFIG
+echo "        Application:" >> $TXGEN_CONFIG
+echo "            <<: *ApplicationDefaults" >> $TXGEN_CONFIG
+echo "            Organizations:" >> $TXGEN_CONFIG
+
+i=1
+while [[ $i -le $FFS_ORGS ]]; do
+	echo "                - *PeerOrg${i}" >> $TXGEN_CONFIG
+	(( i = i + 1 ))
+done
+
+echo "" >> $TXGEN_CONFIG
+
+echo ""
+echo "##################################################################"
+cat $TXGEN_CONFIG
+
+exit $result 

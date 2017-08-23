@@ -1,0 +1,16 @@
+#!/bin/bash
+set -e
+source ../confparams.sh
+result=0
+
+CRYPTO_CONFIG="./crypto-config.yaml"
+CRYPTOGEN="../$FFS_FABRIC_BIN/cryptogen"
+
+echo -e "${FFS_YEL} Generating crypto material using config file $CRYPTO_CONFIG${FFS_NOC}"
+
+test -d ./crypto-config && rm -rf ./crypto-config
+
+echo -e "attempting to run: ${FFS_BLU}$CRYPTOGEN generate --config $CRYPTO_CONFIG ${FFS_NOC}"
+$CRYPTOGEN generate --config $CRYPTO_CONFIG
+
+exit $result 

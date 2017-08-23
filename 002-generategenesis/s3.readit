@@ -1,5 +1,0 @@
-export PATH=../000-getbinaries/bin/:$PATH
-export FABRIC_CFG_PATH=$PWD
-configtxgen -profile ComposerOrdererGenesis -channelID composerchannel -inspectBlock ./composer-genesis.block
-configtxgen -profile ComposerOrdererGenesis -channelID composerchannel -inspectChannelCreateTx ./composer-channel.tx
-

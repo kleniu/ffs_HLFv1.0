@@ -3,9 +3,18 @@ set -e
 source ../confparams.sh
 result=0
 
-cd ../$FSS_FABRIC_ROOT
+CURDIR=$PWD
+cd ../$FFS_FABRIC_ROOT
 make clean-all
 make release
+cd $CURDIR
+
+test -d ../$FFS_FABRIC_BIN || mkdir ../$FFS_FABRIC_BIN
+cp ../$FFS_FABRIC_ROOT/release/$FFS_OS_ARCH/bin/cryptogen ../$FFS_FABRIC_BIN/.
+cp ../$FFS_FABRIC_ROOT/release/$FFS_OS_ARCH/bin/configtxgen ../$FFS_FABRIC_BIN/.
+cp ../$FFS_FABRIC_ROOT/release/$FFS_OS_ARCH/bin/configtxlator ../$FFS_FABRIC_BIN/.
+cp ../$FFS_FABRIC_ROOT/release/$FFS_OS_ARCH/bin/orderer ../$FFS_FABRIC_BIN/.
+cp ../$FFS_FABRIC_ROOT/release/$FFS_OS_ARCH/bin/peer ../$FFS_FABRIC_BIN/.
 
 exit $result 
  

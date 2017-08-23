@@ -1,0 +1,42 @@
+#!/bin/bash
+set -e
+source ../confparams.sh
+result=0
+
+CRYPTO_CONFIG="./crypto-config.yaml"
+
+echo -e "${FFS_YEL} ... using following settings${FFS_NOC}"
+echo "FFS_ORGS        = "$FFS_ORGS
+echo "FFS_ORG_NODES   = "$FFS_ORG_NODES
+echo "FFS_DOMAIN      = "$FFS_DOMAIN
+
+test -d ./logs || mkdir ./logs
+
+echo "OrdererOrgs:" > $CRYPTO_CONFIG
+i=1
+while [[ $i -le $FFS_ORGS ]]; do
+	echo "  - Name: org${i}"  >> $CRYPTO_CONFIG
+	echo "    Domain: org${i}.${FFS_DOMAIN}"  >> $CRYPTO_CONFIG
+	echo "    Template:"  >> $CRYPTO_CONFIG
+	echo "      Count: ${FFS_ORG_NODES}"  >> $CRYPTO_CONFIG
+	echo "    Users:"  >> $CRYPTO_CONFIG
+	echo "      Count: 1"   >> $CRYPTO_CONFIG
+	(( i = i + 1 ))
+done
+
+echo "PeerOrgs:" >> $CRYPTO_CONFIG
+i=1
+while [[ $i -le $FFS_ORGS ]]; do
+	echo "  - Name: org${i}"  >> $CRYPTO_CONFIG
+	echo "    Domain: org${i}.${FFS_DOMAIN}"  >> $CRYPTO_CONFIG
+	echo "    Template:"  >> $CRYPTO_CONFIG
+	echo "      Count: ${FFS_ORG_NODES}"  >> $CRYPTO_CONFIG
+	echo "    Users:"  >> $CRYPTO_CONFIG
+	echo "      Count: 1"   >> $CRYPTO_CONFIG
+	(( i = i + 1 ))
+done
+
+echo -e "${FFS_YEL} generated file $CRYPTO_CONFIG : ${FFS_NOC}"
+cat $CRYPTO_CONFIG
+
+exit $result 

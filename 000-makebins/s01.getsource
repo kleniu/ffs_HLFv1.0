@@ -6,11 +6,11 @@ result=0
 test -d ../$FFS_FABRIC_SOURCE || mkdir ../$FFS_FABRIC_SOURCE
 cd ../$FFS_FABRIC_SOURCE
 if [ -d fabric ]; then
-	cd ../../$FSS_FABRIC_ROOT
+	cd ../../$FFS_FABRIC_ROOT
 	git pull
 else
-	git clone $FSS_FABRIC_GIT
-	cd ../../$FSS_FABRIC_ROOT 
+	git clone $FFS_FABRIC_GIT
+	cd ../../$FFS_FABRIC_ROOT 
 fi
 
 exit $result 

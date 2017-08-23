@@ -1,2 +1,0 @@
-rm -rf ./crypto-config
-rm -rf ./fabric*

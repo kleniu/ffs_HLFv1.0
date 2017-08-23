@@ -1,0 +1,21 @@
+#!/bin/bash
+set -e
+source ../confparams.sh
+result=0
+
+echo -e "${FFS_YEL} Creating genesis block using following settings${FFS_NOC}"
+echo "FFS_ORGS        = "$FFS_ORGS
+echo "FFS_ORG_NODES   = "$FFS_ORG_NODES
+echo "FFS_DOMAIN      = "$FFS_DOMAIN
+
+
+test -d ./artifacts || mkdir artifacts
+rm ./artifacts/* 2>/dev/null || true
+
+echo -e "attempting to run: ${FFS_BLU} configtxgen -profile OrdererGenesis -outputBlock ./artifacts/genesis.block ${FFS_NOC}"
+../$FFS_FABRIC_BIN/configtxgen -profile OrdererGenesis -outputBlock ./artifacts/genesis.block
+
+echo "check ..."
+../$FFS_FABRIC_BIN/configtxgen -profile OrdererGenesis -inspectBlock ./artifacts/genesis.block > ./logs/genesis.block.json
+
+exit $result 
