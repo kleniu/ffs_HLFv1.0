@@ -1,9 +1,0 @@
-#!/bin/bash
-set -e
-source ../confparams.sh
-result=0
-
-../000*/bin/configtxgen -profile OrdererGenesis -outputBlock genesis.block
-
-
-exit $result 
