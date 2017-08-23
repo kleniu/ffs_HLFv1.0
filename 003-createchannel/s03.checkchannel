@@ -1,0 +1,87 @@
+#!/bin/bash
+source ../confparams.sh
+result=0
+
+echo -e "${FFS_YEL} Creating genesis block using following settings${FFS_NOC}"
+echo "FFS_ORGS         = "$FFS_ORGS
+echo "FFS_ORG_NODES    = "$FFS_ORG_NODES
+echo "FFS_DOMAIN       = "$FFS_DOMAIN
+echo "FFS_CHANNEL_NAME = "$FFS_CHANNEL_NAME
+
+
+checkOSNAvailability() {
+	P_DOM=$1
+	P_ORG=$2
+	P_ORN=$3
+	P_ORP=$4
+	P_MSP=$5
+	
+	echo
+	echo -e "${FFS_RED}--->>> Checking existance of channel ${FFS_CHANNEL_NAME} on Orderer $P_ORN at org ${P_ORG}.${P_DOM} <<<---${FFS_NOC}"
+	echo -e "${FFS_BLU}### attempting to execute :${FFS_YEL} peer channel fetch 0 -o ${P_ORN}.${P_ORG}.${P_DOM}:${P_ORP} -c ${FFS_CHANNEL_NAME} --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/${P_ORG}.${P_DOM}/orderers/${P_ORN}.${P_ORG}.${P_DOM}/msp/tlscacerts/tlsca.${P_ORG}.${P_DOM}-cert.pem ${FFS_NOC}"
+
+	local continuecheck=1
+	local starttime=$(date +%s)
+	# continue to poll
+	# we either get a successful response, or reach FFS_TIMEOUT
+	while test "$(($(date +%s)-starttime))" -lt "$FFS_TIMEOUT" -a $continuecheck -ne 0; do
+		echo "Attempting to fetch custom channel ${FFS_CHANNEL_NAME} ... $(($(date +%s)-starttime)) secs"
+		docker exec -ti \
+		-e GOPATH=/opt/gopath \
+		-e CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/${P_ORG}.${P_DOM}/orderers/${P_ORN}.${P_ORG}.${P_DOM}/msp/tlscacerts/tlsca.${P_ORG}.${P_DOM}-cert.pem \
+		-e CORE_PEER_LOCALMSPID=${P_MSP} \
+		-e CORE_PEER_TLS_ENABLED=true \
+		-e CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/${P_ORG}.${P_DOM}/orderers/${P_ORN}.${P_ORG}.${P_DOM}/msp \
+		-e CORE_PEER_ID=cli \
+		-e CORE_LOGGING_LEVEL=DEBUG \
+			cli /bin/bash -c "env | grep CORE; peer channel fetch 0 -o ${P_ORN}.${P_ORG}.${P_DOM}:${P_ORP} -c $FFS_CHANNEL_NAME --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/${P_ORG}.${P_DOM}/orderers/${P_ORN}.${P_ORG}.${P_DOM}/msp/tlscacerts/tlsca.${P_ORG}.${P_DOM}-cert.pem "  >&log.txt
+		RC=$?
+		if [ $RC -eq 0 ]; then
+			VALUE=$(cat log.txt | grep "Received block" | wc -l)
+			if [ .$VALUE. == .1. ]; then
+				let continuecheck=0 || true
+			fi
+		else
+			sleep 3
+		fi
+	done
+	cat log.txt
+	rm log.txt
+	if [ .$continuecheck. == .0. ]; then
+		echo -e "###=== Result : ${FFS_GRE}success - channel ${FFS_CHANNEL_NAMME} exists on Orderer $P_ORN at org ${P_ORG}.${P_DOM}${FFS_NOC} ===###"
+	else
+		echo -e "###=== Result : ${FFS_RED}failed - missing channel ${FFS_CHANNEL_NAMME} on Orderer $P_ORN at org ${P_ORG}.${P_DOM}  ${FFS_NOC}  ===###"
+		return 1
+	fi
+	return 0
+}
+
+
+checkOSNAvailability foo.com org1 orderer0 7050 OrdererOrg1MSP
+(( result = result + $? ))
+checkOSNAvailability foo.com org1 orderer1 7050 OrdererOrg1MSP
+(( result = result + $? ))
+checkOSNAvailability foo.com org2 orderer0 7050 OrdererOrg2MSP
+(( result = result + $? ))
+checkOSNAvailability foo.com org2 orderer1 7050 OrdererOrg2MSP
+(( result = result + $? ))
+checkOSNAvailability foo.com org3 orderer0 7050 OrdererOrg3MSP
+(( result = result + $? ))
+checkOSNAvailability foo.com org3 orderer1 7050 OrdererOrg3MSP
+(( result = result + $? ))
+
+H=orderer0.org1.foo.com; printf "%s >>> " $H; docker exec $H /bin/bash -c "ls -l /var/hyperledger/production/orderer/chains/${FFS_CHANNEL_NAME}/blockfile_000000"
+H=orderer1.org1.foo.com; printf "%s >>> " $H; docker exec $H /bin/bash -c "ls -l /var/hyperledger/production/orderer/chains/${FFS_CHANNEL_NAME}/blockfile_000000"
+H=orderer0.org2.foo.com; printf "%s >>> " $H; docker exec $H /bin/bash -c "ls -l /var/hyperledger/production/orderer/chains/${FFS_CHANNEL_NAME}/blockfile_000000"
+H=orderer1.org2.foo.com; printf "%s >>> " $H; docker exec $H /bin/bash -c "ls -l /var/hyperledger/production/orderer/chains/${FFS_CHANNEL_NAME}/blockfile_000000"
+H=orderer0.org3.foo.com; printf "%s >>> " $H; docker exec $H /bin/bash -c "ls -l /var/hyperledger/production/orderer/chains/${FFS_CHANNEL_NAME}/blockfile_000000"
+H=orderer1.org3.foo.com; printf "%s >>> " $H; docker exec $H /bin/bash -c "ls -l /var/hyperledger/production/orderer/chains/${FFS_CHANNEL_NAME}/blockfile_000000"
+
+
+if [[ .$result. == .0. ]]; then
+	echo -e "Final result: ${FFS_GRE}SUCCESS${FFS_NOC}"
+else
+	echo -e "Final result: ${FFS_RED}FAILED${FFS_NOC}"
+fi
+
+exit $result 
