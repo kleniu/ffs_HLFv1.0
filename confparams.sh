@@ -15,7 +15,7 @@ FFS_CHANNEL_NAME=testchannel
 ############################ DO NOT UPDATE ANYTHING BELOW ############################
 ### You should play with these parameters only if you know what you are doing.
 # timeout used by chaincode query 
-FFS_TIMEOUT=300
+FFS_TIMEOUT=30
 # fabric source dir
 FFS_FABRIC_SOURCE=./000-makebins/source
 # location of the project
