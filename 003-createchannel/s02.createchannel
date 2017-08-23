@@ -1,0 +1,43 @@
+#!/bin/bash
+source ../confparams.sh
+result=0
+
+echo -e "${FFS_YEL} Creating genesis block using following settings${FFS_NOC}"
+echo "FFS_ORGS        = "$FFS_ORGS
+echo "FFS_ORG_NODES   = "$FFS_ORG_NODES
+echo "FFS_DOMAIN      = "$FFS_DOMAIN
+
+function crch() {
+	ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
+	echo
+	echo -e "${RED}--->>> Creating channel <<<---${NOC}"
+	echo -e "${BLU}### attempting to execute :${YEL} peer channel create -o orderer.example.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/channel.tx --tls --cafile $ORDERER_CA ${NOC}"
+	docker exec -ti \
+	-e GOPATH=/opt/gopath \
+	-e CORE_PEER_LOCALMSPID=Org1MSP \
+	-e CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp \
+	-e CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt \
+	-e CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/server.key \
+	-e CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/server.crt \
+	-e CORE_PEER_TLS_ENABLED=true \
+	-e CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock \
+	-e CORE_PEER_ID=cli \
+	-e CORE_LOGGING_LEVEL=DEBUG \
+	-e CORE_PEER_ADDRESS=peer0.org1.example.com:7051 \
+		cli /bin/bash -c "env | grep CORE; peer channel create -o orderer.example.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/channel.tx --tls --cafile $ORDERER_CA" 
+	RC=$?
+	if [[ .$RC. == .0. ]]; then
+		echo -e "###=== Result : ${GRE}success${NOC} ===###"
+	else
+		echo -e "###=== Result : ${RED}failed${NOC}  ===###"
+		exit 1
+	fi
+}
+
+if [[ .$result. == .0. ]]; then
+	echo -e "Final result: ${FFS_GRE}SUCCESS${FFS_NOC}"
+else
+	echo -e "Final result: ${FFS_RED}FAILED${FFS_NOC}"
+fi
+
+exit $result 
