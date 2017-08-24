@@ -1,0 +1,17 @@
+#!/bin/bash
+source ../confparams.sh
+result=0
+
+echo -e "${FFS_YEL}  ${FFS_NOC}"
+echo "FFS_ORGS        = "$FFS_ORGS
+echo "FFS_ORG_NODES   = "$FFS_ORG_NODES
+echo "FFS_DOMAIN      = "$FFS_DOMAIN
+
+
+if [[ .$result. == .0. ]]; then
+	echo -e "Final result: ${FFS_GRE}SUCCESS${FFS_NOC}"
+else
+	echo -e "Final result: ${FFS_RED}FAILED${FFS_NOC}"
+fi
+
+exit $result 
