@@ -1,0 +1,4 @@
+rm -rf artifacts
+rm configtx.yaml
+rm -rf crypto-config
+rm crypto-config.yaml

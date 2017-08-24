@@ -1,0 +1,7 @@
+set -e
+./s01.gencryptoconfig
+./s02.mkcrypto
+./s03.gentxconf
+./s04.mkgenesis
+./s05.chconftx
+./s06.anchorupdtx

@@ -7,6 +7,8 @@ echo "FFS_ORGS        = "$FFS_ORGS
 echo "FFS_ORG_NODES   = "$FFS_ORG_NODES
 echo "FFS_DOMAIN      = "$FFS_DOMAIN
 
+
+
 function crch() {
 	ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/org1.foo.com/orderers/orderer0.org1.foo.com/msp/tlscacerts/tlsca.org1.foo.com-cert.pem
 	echo
@@ -35,8 +37,19 @@ function crch() {
 	return 0	
 }
 
+
+echo "#### block file used for peer channel join - it should be empty now." 
+# in production this file need to be distributed to other orgs ???
+docker exec cli /bin/bash -c "ls -l /opt/gopath/src/github.com/hyperledger/fabric/peer/* | grep $FFS_CHANNEL_NAME" || true
+echo "####"
+
+
 crch
 (( result = result + $? ))
+
+echo "#### block file used for peer channel join" 
+docker exec cli /bin/bash -c "ls -l /opt/gopath/src/github.com/hyperledger/fabric/peer/* | grep $FFS_CHANNEL_NAME" || true
+echo "####"
 
 if [[ .$result. == .0. ]]; then
 	echo -e "Final result: ${FFS_GRE}SUCCESS${FFS_NOC}"

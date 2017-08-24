@@ -1,0 +1,56 @@
+#!/bin/bash
+source ../confparams.sh
+result=0
+
+echo -e "${FFS_YEL} Anchors peers - updateing ch. ${FFS_NOC}"
+echo "FFS_ORGS         = "$FFS_ORGS
+echo "FFS_ORG_NODES    = "$FFS_ORG_NODES
+echo "FFS_DOMAIN       = "$FFS_DOMAIN
+echo "FFS_CHANNEL_NAME = "$FFS_CHANNEL_NAME
+
+function anchorupdatech() {
+	P_DOM=$1
+	P_ORG=$2
+	P_PRN=$3
+	P_PRP=$4
+	P_ORN=$5
+	P_ORP=$6
+	P_MSP=$7
+
+	echo
+	echo -e "${FFS_RED}--->>> Updating channel $CHANNEL_NAME anchor Peer0 for Org1  <<<---${FFS_NOC}"
+	echo -e "${FFS_BLU}### attempting to execute :${YEL} peer channel update -o ${P_ORN}.${P_ORG}.${P_DOM}:${P_ORP} -c $CHANNEL_NAME -f ./channel-artifacts/${P_MSP}anchor.tx --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/${P_ORG}.${P_DOM}/orderers/${P_ORN}.${P_ORG}.${P_DOM}/msp/tlscacerts/tlsca.${P_ORG}.${P_DOM}-cert.pem ${FFS_NOC}"
+	docker exec -ti \
+	-e GOPATH=/opt/gopath \
+	-e CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/${P_ORG}.${P_DOM}/peers/${P_PRN}.${P_ORG}.${P_DOM}/tls/ca.crt \
+	-e CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/${P_ORG}.${P_DOM}/peers/${P_PRN}.${P_ORG}.${P_DOM}/tls/server.key \
+	-e CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/${P_ORG}.${P_DOM}/peers/${P_PRN}.${P_ORG}.${P_DOM}/tls/server.crt \
+	-e CORE_PEER_TLS_ENABLED=true \
+	-e CORE_PEER_LOCALMSPID=${P_MSP} \
+	-e CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/${P_ORG}.${P_DOM}/users/Admin@${P_ORG}.${P_DOM}/msp \
+	-e CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock \
+	-e CORE_PEER_ID=cli \
+	-e CORE_LOGGING_LEVEL=DEBUG \
+	-e CORE_PEER_ADDRESS=${P_PRN}.${P_ORG}.${P_DOM}:${P_PRP} \
+		cli /bin/bash -c "env | grep CORE; peer channel update -o ${P_ORN}.${P_ORG}.${P_DOM}:${P_ORP} -c $FFS_CHANNEL_NAME -f ./channel-artifacts/${P_MSP}anchor.tx --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/${P_ORG}.${P_DOM}/orderers/${P_ORN}.${P_ORG}.${P_DOM}/msp/tlscacerts/tlsca.${P_ORG}.${P_DOM}-cert.pem"
+	RC=$?
+	if [[ .$RC. == .0. ]]; then
+		echo -e "###=== Result : ${FFS_GRE}success${FFS_NOC} ===###"
+	else
+		echo -e "###=== Result : ${FFS_RED}failed${FFS_NOC}  ===###"
+		return 1
+	fi
+	return 0
+}
+
+anchorupdatech foo.com org1 peer0 7051 orderer0 7050 PeerOrg1MSP; (( result = result + $? ))
+anchorupdatech foo.com org2 peer0 7051 orderer0 7050 PeerOrg2MSP; (( result = result + $? ))
+anchorupdatech foo.com org3 peer0 7051 orderer0 7050 PeerOrg3MSP; (( result = result + $? ))
+
+if [[ .$result. == .0. ]]; then
+	echo -e "Final result: ${FFS_GRE}SUCCESS${FFS_NOC}"
+else
+	echo -e "Final result: ${FFS_RED}FAILED${FFS_NOC}"
+fi
+
+exit $result 
