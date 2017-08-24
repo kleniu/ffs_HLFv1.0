@@ -4,3 +4,5 @@ logs
 */composer-logs
 */source
 */bin
+001-generateArtifacts/artifacts
+001-generateArtifacts/crypto-config
