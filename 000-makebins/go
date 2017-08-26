@@ -1,0 +1,13 @@
+source ../confparams.sh
+result=0
+./s01.getsource; (( result = result + $? ))
+./s02.compile; (( result = result + $? ))
+./s03.mkdockerimg; (( result = result + $? ))
+
+if [[ .$result. == .0. ]]; then
+        echo -e "Section result: ${FFS_GRE}SUCCESS${FFS_NOC}"
+	exit 0
+else
+        echo -e "Section result: ${FFS_RED}FAILED${FFS_NOC}"
+	exit 1
+fi

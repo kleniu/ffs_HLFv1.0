@@ -2,7 +2,12 @@
 source ../confparams.sh
 result=0
 
-echo -e "${FFS_YEL} Creating genesis block using following settings${FFS_NOC}"
+echo
+echo -e "${FFS_YEL}############################################${FFS_NOC}"
+echo -e "${FFS_YEL} checking cannel $FFS_CHANNEL_NAME          ${FFS_NOC}"
+echo -e "${FFS_BLU} Script :${FFS_NOC}" "$0"
+echo -e "${FFS_YEL}############################################${FFS_NOC}"
+echo "GOPATH           = "$GOPATH
 echo "FFS_ORGS         = "$FFS_ORGS
 echo "FFS_ORG_NODES    = "$FFS_ORG_NODES
 echo "FFS_DOMAIN       = "$FFS_DOMAIN

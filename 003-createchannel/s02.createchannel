@@ -2,12 +2,18 @@
 source ../confparams.sh
 result=0
 
-echo -e "${FFS_YEL} Creating genesis block using following settings${FFS_NOC}"
-echo "FFS_ORGS        = "$FFS_ORGS
-echo "FFS_ORG_NODES   = "$FFS_ORG_NODES
-echo "FFS_DOMAIN      = "$FFS_DOMAIN
+echo
+echo -e "${FFS_YEL}############################################${FFS_NOC}"
+echo -e "${FFS_YEL} Creating channel  ${FFS_NOC}"
+echo -e "${FFS_BLU} Script :${FFS_NOC}" "$0"
+echo -e "${FFS_YEL}############################################${FFS_NOC}"
+echo "GOPATH         = "$GOPATH
+echo "FFS_ORGS       = "$FFS_ORGS
+echo "FFS_ORG_NODES  = "$FFS_ORG_NODES
+echo "FFS_DOMAIN     = "$FFS_DOMAIN
 
-
+### question1: do I need peer certs to create channel?
+### question2: do i have to copy chname.block file to other orgs ?
 
 function crch() {
 	ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/org1.foo.com/orderers/orderer0.org1.foo.com/msp/tlscacerts/tlsca.org1.foo.com-cert.pem
@@ -43,13 +49,17 @@ echo "#### block file used for peer channel join - it should be empty now."
 docker exec cli /bin/bash -c "ls -l /opt/gopath/src/github.com/hyperledger/fabric/peer/* | grep $FFS_CHANNEL_NAME" || true
 echo "####"
 
-
 crch
 (( result = result + $? ))
 
 echo "#### block file used for peer channel join" 
 docker exec cli /bin/bash -c "ls -l /opt/gopath/src/github.com/hyperledger/fabric/peer/* | grep $FFS_CHANNEL_NAME" || true
 echo "####"
+
+echo "#### coping $FFS_CHANNEL_NAME.block file to local filesystem "
+docker cp cli:/opt/gopath/src/github.com/hyperledger/fabric/peer/$FFS_CHANNEL_NAME.block ./logs/$FFS_CHANNEL_NAME.block-aftercrch
+(( result = result + $? ))
+md5sum ./logs/$FFS_CHANNEL_NAME.block-aftercrch | tee ./logs/$FFS_CHANNEL_NAME.block-aftercrch.md5
 
 if [[ .$result. == .0. ]]; then
 	echo -e "Final result: ${FFS_GRE}SUCCESS${FFS_NOC}"

@@ -10,7 +10,7 @@ echo -e "${FFS_YEL} Stopping and removing docker containers    ${FFS_NOC}"
 echo -e "${FFS_BLU} Script :${FFS_NOC}" "$0"
 echo -e "${FFS_YEL}############################################${FFS_NOC}"
 echo "GOPATH         = "$GOPATH
-echo "FFS_FABRIC_BIN = "$FFS_FABRIC_
+echo "FFS_FABRIC_BIN = "$FFS_FABRIC_BIN
 
 docker-compose down 
 # removing chaincode containers

@@ -2,7 +2,12 @@
 source ../confparams.sh
 result=0
 
-echo -e "${FFS_YEL} Creating genesis block using following settings${FFS_NOC}"
+echo
+echo -e "${FFS_YEL}############################################${FFS_NOC}"
+echo -e "${FFS_YEL} Joining channel $FFS_CHANNEL_NAME          ${FFS_NOC}"
+echo -e "${FFS_BLU} Script :${FFS_NOC}" "$0"
+echo -e "${FFS_YEL}############################################${FFS_NOC}"
+echo "GOPATH           = "$GOPATH
 echo "FFS_ORGS         = "$FFS_ORGS
 echo "FFS_ORG_NODES    = "$FFS_ORG_NODES
 echo "FFS_DOMAIN       = "$FFS_DOMAIN
@@ -45,11 +50,17 @@ function joinch() {
 }
 
 joinch foo.com org1 peer0 7051 PeerOrg1MSP; (( result = result + $? ))
+docker cp cli:/opt/gopath/src/github.com/hyperledger/fabric/peer/$FFS_CHANNEL_NAME.block ./logs/$FFS_CHANNEL_NAME.block-afterjoin-peer0.org1
 joinch foo.com org1 peer1 7051 PeerOrg1MSP; (( result = result + $? ))
+docker cp cli:/opt/gopath/src/github.com/hyperledger/fabric/peer/$FFS_CHANNEL_NAME.block ./logs/$FFS_CHANNEL_NAME.block-afterjoin-peer1.org1
 joinch foo.com org2 peer0 7051 PeerOrg2MSP; (( result = result + $? ))
+docker cp cli:/opt/gopath/src/github.com/hyperledger/fabric/peer/$FFS_CHANNEL_NAME.block ./logs/$FFS_CHANNEL_NAME.block-afterjoin-peer0.org2
 joinch foo.com org2 peer1 7051 PeerOrg2MSP; (( result = result + $? ))
+docker cp cli:/opt/gopath/src/github.com/hyperledger/fabric/peer/$FFS_CHANNEL_NAME.block ./logs/$FFS_CHANNEL_NAME.block-afterjoin-peer1.org2
 joinch foo.com org3 peer0 7051 PeerOrg3MSP; (( result = result + $? ))
+docker cp cli:/opt/gopath/src/github.com/hyperledger/fabric/peer/$FFS_CHANNEL_NAME.block ./logs/$FFS_CHANNEL_NAME.block-afterjoin-peer0.org3
 joinch foo.com org3 peer1 7051 PeerOrg3MSP; (( result = result + $? ))
+docker cp cli:/opt/gopath/src/github.com/hyperledger/fabric/peer/$FFS_CHANNEL_NAME.block ./logs/$FFS_CHANNEL_NAME.block-afterjoin-peer1.org3
 
 if [[ .$result. == .0. ]]; then
 	echo -e "Final result: ${FFS_GRE}SUCCESS${FFS_NOC}"
