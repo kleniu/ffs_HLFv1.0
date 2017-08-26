@@ -3,13 +3,29 @@ set -e
 source ../confparams.sh
 result=0
 
+echo
+echo -e "${FFS_YEL}###########################################################${FFS_NOC}"
 echo -e "${FFS_YEL} Generating channel configuration transaction 'channel.tx' ${FFS_NOC}"
-echo "FFS_CHANNEL_NAME        = "$FFS_CHANNEL_NAME
+echo -e "${FFS_BLU} Script :${FFS_NOC}" "$0"
+echo -e "${FFS_YEL}###########################################################${FFS_NOC}"
+echo "GOPATH           = "$GOPATH
+echo "FFS_CHANNEL_NAME = "$FFS_CHANNEL_NAME
 
-echo -e "attempting to run: ${FFS_BLU}configtxgen -profile Channel -outputCreateChannelTx ./artifacts/channel.tx -channelID $FFS_CHANNEL_NAME ${FFS_NOC}"
-../$FFS_FABRIC_BIN/configtxgen -profile Channel -outputCreateChannelTx ./artifacts/channel.tx -channelID $FFS_CHANNEL_NAME
+echo -e "attempting to run: ${FFS_BLU} $FFS_FABRIC_BIN/configtxgen -profile Channel -outputCreateChannelTx ./artifacts/channel.tx -channelID $FFS_CHANNEL_NAME ${FFS_NOC}"
+$FFS_FABRIC_BIN/configtxgen -profile Channel -outputCreateChannelTx ./artifacts/channel.tx -channelID $FFS_CHANNEL_NAME
 
 echo "check ..."
-../$FFS_FABRIC_BIN/configtxgen -profile Channel -inspectChannelCreateTx ./artifacts/channel.tx > ./logs/channel.tx.json 
+$FFS_FABRIC_BIN/configtxgen -profile Channel -inspectChannelCreateTx ./artifacts/channel.tx > ./logs/channel.tx.json 
+echo "size ..."
+ls -la ./artifacts/channel.tx
+echo "checksum ..."
+md5sum ./artifacts/channel.tx | tee ./logs/channel.tx.md5
+
+if [[ .$result. == .0. ]]; then
+        echo -e "Script result: ${FFS_GRE}SUCCESS${FFS_NOC}"
+else
+        echo -e "Script result: ${FFS_RED}FAILED${FFS_NOC}"
+fi
+
 
 exit $result 

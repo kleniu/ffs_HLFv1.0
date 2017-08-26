@@ -5,7 +5,13 @@ result=0
 
 TXGEN_CONFIG=./configtx.yaml
 
-echo -e "${FFS_YEL} Creating $TXGEN_CONFIG file using following settings${FFS_NOC}"
+echo
+echo -e "${FFS_YEL}########################################################${FFS_NOC}"
+echo -e "${FFS_YEL} Creating $TXGEN_CONFIG file using following settings ${FFS_NOC}"
+echo -e "${FFS_BLU} Script :${FFS_NOC}" "$0"
+echo -e "${FFS_YEL}########################################################${FFS_NOC}"
+echo "GOPATH          = "$GOPATH
+echo "FFS_FABRIC_BIN  = "$FFS_FABRIC_BIN
 echo "FFS_ORGS        = "$FFS_ORGS
 echo "FFS_ORG_NODES   = "$FFS_ORG_NODES
 echo "FFS_DOMAIN      = "$FFS_DOMAIN
@@ -110,5 +116,11 @@ echo "" >> $TXGEN_CONFIG
 echo ""
 echo "##################################################################"
 cat $TXGEN_CONFIG
+
+if [[ .$result. == .0. ]]; then
+        echo -e "Script result: ${FFS_GRE}SUCCESS${FFS_NOC}"
+else
+        echo -e "Script result: ${FFS_RED}FAILED${FFS_NOC}"
+fi
 
 exit $result 

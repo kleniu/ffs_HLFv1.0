@@ -5,7 +5,12 @@ result=0
 
 CRYPTO_CONFIG="./crypto-config.yaml"
 
-echo -e "${FFS_YEL} ... using following settings${FFS_NOC}"
+echo
+echo -e "${FFS_YEL}############################################${FFS_NOC}"
+echo -e "${FFS_YEL} Generating crypto-config.yaml file         ${FFS_NOC}"
+echo -e "${FFS_BLU} Script :${FFS_NOC}" "$0"
+echo -e "${FFS_YEL}############################################${FFS_NOC}"
+echo "GOPATH          = "$GOPATH
 echo "FFS_ORGS        = "$FFS_ORGS
 echo "FFS_ORG_NODES   = "$FFS_ORG_NODES
 echo "FFS_DOMAIN      = "$FFS_DOMAIN
@@ -38,5 +43,11 @@ done
 
 echo -e "${FFS_YEL} generated file $CRYPTO_CONFIG : ${FFS_NOC}"
 cat $CRYPTO_CONFIG
+
+if [[ .$result. == .0. ]]; then
+        echo -e "Script result: ${FFS_GRE}SUCCESS${FFS_NOC}"
+else
+        echo -e "Script result: ${FFS_RED}FAILED${FFS_NOC}"
+fi
 
 exit $result 

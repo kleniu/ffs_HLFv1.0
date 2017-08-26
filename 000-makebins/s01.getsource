@@ -3,14 +3,30 @@ set -e
 source ../confparams.sh
 result=0
 
-test -d ../$FFS_FABRIC_SOURCE || mkdir ../$FFS_FABRIC_SOURCE
-cd ../$FFS_FABRIC_SOURCE
+echo
+echo -e "${FFS_YEL}###########################################################${FFS_NOC}"
+echo -e "${FFS_YEL} Cloning or just pulling Hyperledger fabric git repository ${FFS_NOC}"
+echo -e "${FFS_BLU} Script :${FFS_NOC}" "$0"
+echo -e "${FFS_YEL}###########################################################${FFS_NOC}"
+echo "GOPATH            = "$GOPATH
+echo "FFS_FABRIC_SOURCE = "$FFS_FABRIC_SOURCE
+echo "FFS_FABRIC_ROOT   = "$FFS_FABRIC_ROOT
+echo "FFS_FABRIC_GIT    = "$FFS_FABRIC_GIT
+
+test -d $FFS_FABRIC_SOURCE || mkdir -p $FFS_FABRIC_SOURCE
+cd $FFS_FABRIC_SOURCE
 if [ -d fabric ]; then
-	cd ../../$FFS_FABRIC_ROOT
+	cd $FFS_FABRIC_ROOT
 	git pull
 else
 	git clone $FFS_FABRIC_GIT
-	cd ../../$FFS_FABRIC_ROOT 
+	cd $FFS_FABRIC_ROOT 
+fi
+
+if [[ .$result. == .0. ]]; then
+        echo -e "Script result: ${FFS_GRE}SUCCESS${FFS_NOC}"
+else
+        echo -e "Script result: ${FFS_RED}FAILED${FFS_NOC}"
 fi
 
 exit $result 

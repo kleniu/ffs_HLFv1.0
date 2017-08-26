@@ -1,7 +1,16 @@
-set -e
-./s01.gencryptoconfig
-./s02.mkcrypto
-./s03.gentxconf
-./s04.mkgenesis
-./s05.chconftx
-./s06.anchorupdtx
+source ../confparams.sh
+result=0
+./s01.gencryptoconfig; (( result = result + $? ))
+./s02.mkcrypto; (( result = result + $? ))
+./s03.gentxconf; (( result = result + $? ))
+./s04.mkgenesis; (( result = result + $? ))
+./s05.chconftx; (( result = result + $? ))
+./s06.anchorupdtx; (( result = result + $? ))
+
+if [[ .$result. == .0. ]]; then
+        echo -e "Section result: ${FFS_GRE}SUCCESS${FFS_NOC}"
+	exit 0
+else
+        echo -e "Section result: ${FFS_RED}FAILED${FFS_NOC}"
+	exit 1
+fi

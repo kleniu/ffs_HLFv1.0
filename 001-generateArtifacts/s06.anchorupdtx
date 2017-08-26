@@ -3,7 +3,12 @@ set -e
 source ../confparams.sh
 result=0
 
-echo -e "${FFS_YEL} Generating channel configuration transaction 'channel.tx' ${FFS_NOC}"
+echo
+echo -e "${FFS_YEL}##################################################${FFS_NOC}"
+echo -e "${FFS_YEL} Generating anchor peer configuration transaction ${FFS_NOC}"
+echo -e "${FFS_BLU} Script :${FFS_NOC}" "$0"
+echo -e "${FFS_YEL}##################################################${FFS_NOC}"
+echo "GOPATH         = "$GOPATH
 echo "FFS_CHANNEL_NAME = "$FFS_CHANNEL_NAME
 echo "FFS_ORGS         = "$FFS_ORGS
 
@@ -11,11 +16,21 @@ echo "FFS_ORGS         = "$FFS_ORGS
 i=1
 while [[ $i -le $FFS_ORGS ]]; do
 	ORG=PeerOrg${i}MSP
-	echo -e "attempting to run: ${FFS_BLU} configtxgen -profile Channel -outputAnchorPeersUpdate ./artifacts/${ORG}anchor.tx -channelID $FFS_CHANNEL_NAME -asOrg ${ORG} ${FFS_NOC}"
-	../$FFS_FABRIC_BIN/configtxgen -profile Channel -outputAnchorPeersUpdate ./artifacts/${ORG}anchor.tx -channelID $FFS_CHANNEL_NAME -asOrg ${ORG}
+	echo -e "attempting to run: ${FFS_BLU} $FFS_FABRIC_BIN/configtxgen -profile Channel -outputAnchorPeersUpdate ./artifacts/${ORG}anchor.tx -channelID $FFS_CHANNEL_NAME -asOrg ${ORG} ${FFS_NOC}"
+	$FFS_FABRIC_BIN/configtxgen -profile Channel -outputAnchorPeersUpdate ./artifacts/${ORG}anchor.tx -channelID $FFS_CHANNEL_NAME -asOrg ${ORG}
 	echo "check ..."
-	../$FFS_FABRIC_BIN/configtxgen -profile Channel -inspectChannelCreateTx ./artifacts/${ORG}anchor.tx > ./logs/${ORG}anchor.tx.json 
+	$FFS_FABRIC_BIN/configtxgen -profile Channel -inspectChannelCreateTx ./artifacts/${ORG}anchor.tx > ./logs/${ORG}anchor.tx.json 
+	echo "size ..."
+	ls -la ./artifacts/${ORG}anchor.tx
+	echo "checksum ..."
+	md5sum ./artifacts/${ORG}anchor.tx | tee ./logs/${ORG}anchor.tx.md5
  	(( i = i + 1 ))
 done
+
+if [[ .$result. == .0. ]]; then
+        echo -e "Script result: ${FFS_GRE}SUCCESS${FFS_NOC}"
+else
+        echo -e "Script result: ${FFS_RED}FAILED${FFS_NOC}"
+fi
 
 exit $result 

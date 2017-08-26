@@ -4,13 +4,25 @@ source ../confparams.sh
 source ../commonfun.sh
 result=0
 
-cd ../$FFS_FABRIC_ROOT
-e_is_set=${-//[^x]/}
-set +e
-_rmi
-if [[ -n "$e_is_set" ]]; then set -e; else set +e; fi
+echo
+echo -e "${FFS_YEL}###############################${FFS_NOC}"
+echo -e "${FFS_YEL} Making required docker images ${FFS_NOC}"
+echo -e "${FFS_BLU} Script :${FFS_NOC}" "$0"
+echo -e "${FFS_YEL}###############################${FFS_NOC}"
+echo "GOPATH          = "$GOPATH
+echo "FFS_FABRIC_ROOT = "$FFS_FABRIC_ROOT
+
+CURDIR=$PWD
+cd $FFS_FABRIC_ROOT
+_rmi || true
 make docker-clean
 make docker
+cd $CURDIR
+
+if [[ .$result. == .0. ]]; then
+        echo -e "Script result: ${FFS_GRE}SUCCESS${FFS_NOC}"
+else
+        echo -e "Script result: ${FFS_RED}FAILED${FFS_NOC}"
+fi
 
 exit $result 
- 

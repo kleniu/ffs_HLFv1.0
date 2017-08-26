@@ -1,4 +1,25 @@
+source ../confparams.sh
+
+result=0
+echo
+echo -e "${FFS_YEL}###############################${FFS_NOC}"
+echo -e "${FFS_YEL} Cleaning all crypto artifacts ${FFS_NOC}"
+echo -e "${FFS_BLU} Script :${FFS_NOC}" "$0"
+echo -e "${FFS_YEL}###############################${FFS_NOC}"
+echo "GOPATH         = "$GOPATH
+
+set -x
 rm -rf artifacts
 rm configtx.yaml
 rm -rf crypto-config
 rm crypto-config.yaml
+set +x
+
+if [[ .$result. == .0. ]]; then
+        echo -e "Script result: ${FFS_GRE}SUCCESS${FFS_NOC}"
+else
+        echo -e "Script result: ${FFS_RED}FAILED${FFS_NOC}"
+fi
+
+exit $result
+

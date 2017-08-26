@@ -1,4 +1,6 @@
 ### configuration variables
+# project root directory - you MUST change it
+FFS_ROOT=/home/hlfd/LABS/ffs_HLFv1.0
 
 ## variables used for crypto material generation
 # number of organisations
@@ -15,12 +17,14 @@ FFS_CHANNEL_NAME=testchannel
 ### You should play with these parameters only if you know what you are doing.
 # timeout used by chaincode query 
 FFS_TIMEOUT=30
+# GOPATH
+GOPATH=${FFS_ROOT}/000-makebins/GOPATH
+# fabric bin dir
+FFS_FABRIC_BIN=${FFS_ROOT}/000-makebins/bin
 # fabric source dir
-FFS_FABRIC_SOURCE=./000-makebins/source
+FFS_FABRIC_SOURCE=$GOPATH/src/github.com/hyperledger
 # location of the project
 FFS_FABRIC_ROOT=${FFS_FABRIC_SOURCE}/fabric
-# fabric bin dir
-FFS_FABRIC_BIN=./000-makebins/bin
 # location of the GIT repo. It's used for fetching source code
 FFS_FABRIC_GIT="https://gerrit.hyperledger.org/r/fabric"
 

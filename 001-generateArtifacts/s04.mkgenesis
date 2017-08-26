@@ -3,19 +3,36 @@ set -e
 source ../confparams.sh
 result=0
 
-echo -e "${FFS_YEL} Creating genesis block using following settings${FFS_NOC}"
-echo "FFS_ORGS        = "$FFS_ORGS
-echo "FFS_ORG_NODES   = "$FFS_ORG_NODES
-echo "FFS_DOMAIN      = "$FFS_DOMAIN
+echo
+echo -e "${FFS_YEL}#################################################${FFS_NOC}"
+echo -e "${FFS_YEL} Creating genesis block using following settings ${FFS_NOC}"
+echo -e "${FFS_BLU} Script :${FFS_NOC}" "$0"
+echo -e "${FFS_YEL}#################################################${FFS_NOC}"
+echo "GOPATH        = "$GOPATH
+echo "FFS_ORGS      = "$FFS_ORGS
+echo "FFS_ORG_NODES = "$FFS_ORG_NODES
+echo "FFS_DOMAIN    = "$FFS_DOMAIN
 
 
 test -d ./artifacts || mkdir artifacts
 rm ./artifacts/* 2>/dev/null || true
 
-echo -e "attempting to run: ${FFS_BLU} configtxgen -profile OrdererGenesis -outputBlock ./artifacts/genesis.block ${FFS_NOC}"
-../$FFS_FABRIC_BIN/configtxgen -profile OrdererGenesis -outputBlock ./artifacts/genesis.block
+echo -e "attempting to run: ${FFS_BLU} $FFS_FABRIC_BIN/configtxgen -profile OrdererGenesis -outputBlock ./artifacts/genesis.block ${FFS_NOC}"
+$FFS_FABRIC_BIN/configtxgen -profile OrdererGenesis -outputBlock ./artifacts/genesis.block
 
 echo "check ..."
-../$FFS_FABRIC_BIN/configtxgen -profile OrdererGenesis -inspectBlock ./artifacts/genesis.block > ./logs/genesis.block.json
+$FFS_FABRIC_BIN/configtxgen -profile OrdererGenesis -inspectBlock ./artifacts/genesis.block > ./logs/genesis.block.json
+
+echo "size ..."
+ls -la ./artifacts/genesis.block
+echo "checksum ..."
+md5sum ./artifacts/genesis.block | tee ./logs/genesis.block.md5
+
+
+if [[ .$result. == .0. ]]; then
+        echo -e "Script result: ${FFS_GRE}SUCCESS${FFS_NOC}"
+else
+        echo -e "Script result: ${FFS_RED}FAILED${FFS_NOC}"
+fi
 
 exit $result 

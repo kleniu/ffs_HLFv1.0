@@ -1,3 +1,15 @@
+source ../confparams.sh
 set -e
+
+echo
+echo -e "${FFS_YEL}############################################${FFS_NOC}"
+echo -e "${FFS_YEL} Starting docker containers                 ${FFS_NOC}"
+echo -e "${FFS_BLU} Script :${FFS_NOC}" "$0"
+echo -e "${FFS_YEL}############################################${FFS_NOC}"
+echo "GOPATH         = "$GOPATH
+
 export COMPOSE_PROJECT_NAME=ffsnet
 docker-compose up -d 
+
+echo -e "Script result: ${FFS_GRE}SUCCESS${FFS_NOC}"
+exit 0

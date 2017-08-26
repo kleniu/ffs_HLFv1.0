@@ -3,6 +3,21 @@ source ../commonfun.sh
 source ../confparams.sh
 
 export COMPOSE_PROJECT_NAME=ffsnet
+
+echo
+echo -e "${FFS_YEL}############################################${FFS_NOC}"
+echo -e "${FFS_YEL} Stopping and removing docker containers    ${FFS_NOC}"
+echo -e "${FFS_BLU} Script :${FFS_NOC}" "$0"
+echo -e "${FFS_YEL}############################################${FFS_NOC}"
+echo "GOPATH         = "$GOPATH
+echo "FFS_FABRIC_BIN = "$FFS_FABRIC_
+
 docker-compose down 
-_rmc
-_rmidev
+# removing chaincode containers
+_rmc || true
+# removing chaincode images
+_rmidev || true
+
+echo -e "Script result: ${FFS_GRE}SUCCESS${FFS_NOC}"
+
+exit 0
