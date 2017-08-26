@@ -1,0 +1,57 @@
+#!/bin/bash
+source ../confparams.sh
+result=0
+
+echo -e "${FFS_YEL}  ${FFS_NOC}"
+echo "FFS_ORGS        = "$FFS_ORGS
+echo "FFS_ORG_NODES   = "$FFS_ORG_NODES
+echo "FFS_DOMAIN      = "$FFS_DOMAIN
+
+
+function installcc() {
+	P_DOM=$1
+	P_ORG=$2
+	P_PRN=$3
+	P_PRP=$4
+	P_MSP=$5
+
+	echo
+	echo -e "${FFS_RED}--->>> Installing CC on ${P_ORG} ${P_PRN}  <<<---${FFS_NOC}"
+	echo -e "${FFS_BLU}### attempting to execute :${YEL} peer chaincode install -n mycc -v 1.0 -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02 ${FFS_NOC}"
+	docker exec -ti \
+	-e GOPATH=/opt/gopath \
+	-e CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/${P_ORG}.${P_DOM}/peers/${P_PRN}.${P_ORG}.${P_DOM}/tls/ca.crt \
+	-e CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/${P_ORG}.${P_DOM}/peers/${P_PRN}.${P_ORG}.${P_DOM}/tls/server.key \
+	-e CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/${P_ORG}.${P_DOM}/peers/${P_PRN}.${P_ORG}.${P_DOM}/tls/server.crt \
+	-e CORE_PEER_TLS_ENABLED=true \
+	-e CORE_PEER_LOCALMSPID=${P_MSP} \
+	-e CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock \
+	-e CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/${P_ORG}.${P_DOM}/users/Admin@${P_ORG}.${P_DOM}/msp \
+	-e CORE_PEER_ID=cli \
+	-e CORE_LOGGING_LEVEL=DEBUG \
+	-e CORE_PEER_ADDRESS=${P_PRN}.${P_ORG}.${P_DOM}:${P_PRP} \
+		cli /bin/bash -c "env | grep CORE; peer chaincode install -n mycc -v 1.0 -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02"
+	RC=$?
+	if [[ .$RC. == .0. ]]; then
+		echo -e "###=== Result : ${FFS_GRE}success${FFS_NOC} ===###"
+	else
+		echo -e "###=== Result : ${FFS_RED}failed${FFS_NOC}  ===###"
+		return 1
+	fi
+	return 0
+}
+
+installcc foo.com org1 peer0 7051 PeerOrg1MSP; (( result = result + $? ))
+installcc foo.com org1 peer1 7051 PeerOrg1MSP; (( result = result + $? ))
+installcc foo.com org2 peer0 7051 PeerOrg2MSP; (( result = result + $? ))
+installcc foo.com org2 peer1 7051 PeerOrg2MSP; (( result = result + $? ))
+installcc foo.com org3 peer0 7051 PeerOrg3MSP; (( result = result + $? ))
+installcc foo.com org3 peer1 7051 PeerOrg3MSP; (( result = result + $? ))
+
+if [[ .$result. == .0. ]]; then
+	echo -e "Final result: ${FFS_GRE}SUCCESS${FFS_NOC}"
+else
+	echo -e "Final result: ${FFS_RED}FAILED${FFS_NOC}"
+fi
+
+exit $result 

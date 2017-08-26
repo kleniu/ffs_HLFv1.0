@@ -1,0 +1,67 @@
+#!/bin/bash
+source ../confparams.sh
+result=0
+
+echo -e "${FFS_YEL}  ${FFS_NOC}"
+echo "FFS_ORGS        = "$FFS_ORGS
+echo "FFS_ORG_NODES   = "$FFS_ORG_NODES
+echo "FFS_DOMAIN      = "$FFS_DOMAIN
+
+function instantiatecc() {
+	P_DOM=$1
+	P_ORG=$2
+	P_PRN=$3
+	P_PRP=$4
+	P_ORN=$5
+	P_ORP=$6
+	P_MSP=$7
+	
+	echo
+	echo -e "${FFS_RED}--->>> Instantiate CC on ${P_ORG} ${P_PRN}  <<<---${FFS_NOC}"
+	echo -e "${FFS_BLU}### attempting to execute :${YEL} peer chaincode instantiate -o ${P_ORN}.${P_ORG}.${P_DOM}:${P_ORP} --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/${P_ORG}.${P_DOM}/orderers/${P_ORN}.${P_ORG}.${P_DOM}/msp/tlscacerts/tlsca.${P_ORG}.${P_DOM}-cert.pem -C $FFS_CHANNEL_NAME -n mycc -v 1.0 -c '{\"Args\":[\"init\",\"a\",\"100\",\"b\",\"200\"]}' -P \"OR ('PeerOrg1MSP.member','PeerOrg2MSP.member','PeerOrg3MSP.member)\" ${FFS_NOC}"
+
+	#### ERROR
+	# CORE_VM_DOCKER_TLS_ENABLED 
+	# CORE_VM_DOCKER_TLS_KEY
+	# docker logs dev-peer0.org1.foo.com-mycc-1.0
+	# flag provided but not defined: -key
+	# Usage of chaincode:
+	#   -peer.address string
+	#     	peer address
+	# CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=ffsnet_default 
+
+
+	docker exec -ti \
+	-e GOPATH=/opt/gopath \
+	-e CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=ffsnet_default \
+	-e CORE_CHAINCODE_LOGGING_LEVEL=debug \
+	-e CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/${P_ORG}.${P_DOM}/peers/${P_PRN}.${P_ORG}.${P_DOM}/tls/ca.crt \
+	-e CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.${P_DOM}/peers/${P_PRN}.org1.${P_DOM}/tls/server.key \
+	-e CORE_PEER_LOCALMSPID=${P_MSP} \
+	-e CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock \
+	-e CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.${P_DOM}/peers/${P_PRN}.org1.${P_DOM}/tls/server.crt \
+	-e CORE_PEER_TLS_ENABLED=true \
+	-e CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/${P_ORG}.${P_DOM}/users/Admin@${P_ORG}.${P_DOM}/msp \
+	-e CORE_PEER_ID=cli \
+	-e CORE_LOGGING_LEVEL=DEBUG \
+	-e CORE_PEER_ADDRESS=${P_PRN}.${P_ORG}.${P_DOM}:${P_PRP} \
+		cli /bin/bash -c "env | grep CORE; peer chaincode instantiate -o ${P_ORN}.${P_ORG}.${P_DOM}:${P_ORP} --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/${P_ORG}.${P_DOM}/orderers/${P_ORN}.${P_ORG}.${P_DOM}/msp/tlscacerts/tlsca.${P_ORG}.${P_DOM}-cert.pem -C $FFS_CHANNEL_NAME -n mycc -v 1.0 -c '{\"Args\":[\"init\",\"a\",\"100\",\"b\",\"200\"]}' -P \"OR ('PeerOrg1MSP.member','PeerOrg2MSP.member','PeerOrg3MSP.member')\" "
+	RC=$?
+	if [[ .$RC. == .0. ]]; then
+		echo -e "###=== Result : ${FFS_GRE}success${FFS_NOC} ===###"
+	else
+		echo -e "###=== Result : ${FFS_RED}failed${FFS_NOC}  ===###"
+		return 1
+	fi
+	return 0
+}
+
+instantiatecc foo.com org1 peer0 7051 orderer0 7050 PeerOrg1MSP
+
+if [[ .$result. == .0. ]]; then
+	echo -e "Final result: ${FFS_GRE}SUCCESS${FFS_NOC}"
+else
+	echo -e "Final result: ${FFS_RED}FAILED${FFS_NOC}"
+fi
+
+exit $result 

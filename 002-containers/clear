@@ -1,0 +1,8 @@
+set -e
+source ../commonfun.sh
+source ../confparams.sh
+
+export COMPOSE_PROJECT_NAME=ffsnet
+docker-compose down 
+_rmc
+_rmidev

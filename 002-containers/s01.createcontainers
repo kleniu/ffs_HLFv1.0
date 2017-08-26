@@ -1,0 +1,3 @@
+set -e
+export COMPOSE_PROJECT_NAME=ffsnet
+docker-compose up -d 
