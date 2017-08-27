@@ -1,0 +1,72 @@
+#!/bin/bash
+source ../confparams.sh
+result=0
+
+FFS_WARN=0
+
+echo
+echo -e "${FFS_YEL}############################################${FFS_NOC}"
+echo -e "${FFS_YEL} Invoke chaincode on single node            ${FFS_NOC}"
+echo -e "${FFS_BLU} Script :${FFS_NOC}" "$0"
+echo -e "${FFS_YEL}############################################${FFS_NOC}"
+echo "GOPATH          = "$GOPATH
+echo "FFS_ORGS        = "$FFS_ORGS
+echo "FFS_ORG_NODES   = "$FFS_ORG_NODES
+echo "FFS_DOMAIN      = "$FFS_DOMAIN
+
+
+function invokecc() {
+	P_DOM=foo.com
+	P_ORG=org1
+	P_ORN=orderer0
+	P_ORP=7050
+	P_PRN=peer0
+	P_PRP=7051
+	P_MSP=PeerOrg1MSP
+	P_VAL=15
+
+	echo
+	echo -e "${RED}--->>> Invoke CC on org2 ${P_PRN} with VALUE=\"$VAL\"  <<<---${NOC}"
+	VAL=$1
+	if [[ .$P_VAL. == .. ]]; then
+		echo -e "${RED}ERR: missing argument 1 : VALUE ${NOC}"
+		exit
+	fi
+	echo -e "${BLU}### attempting to execute :${YEL} peer chaincode invoke -o ${P_ORN}.${P_ORG}.${P_DOM}:${P_ORP}  --tls  --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/${P_ORG}.${P_DOM}/orderers/${P_ORN}.${P_ORG}.${P_DOM}/msp/tlscacerts/tlsca.${P_ORG}.${P_DOM}-cert.pem -C $FFS_CHANNEL_NAME -n mycc -c '{\"Args\":[\"invoke\",\"a\",\"b\",\"${P_VAL}\"]}' ${NOC}"
+	docker exec -ti \
+		-e GOPATH=/opt/gopath \
+		-e CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/${P_ORG}.${P_DOM}/peers/${P_PRN}.${P_ORG}.${P_DOM}/tls/ca.crt \
+		-e CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/${P_ORG}.${P_DOM}/peers/${P_PRN}.${P_ORG}.${P_DOM}/tls/server.key \
+		-e CORE_PEER_LOCALMSPID=${P_MSP} \
+		-e CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock \
+		-e CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/${P_ORG}.${P_DOM}/peers/${P_PRN}.${P_ORG}.${P_DOM}/tls/server.crt \
+		-e CORE_PEER_TLS_ENABLED=true \
+		-e CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/${P_ORG}.${P_DOM}/users/Admin@${P_ORG}.${P_DOM}/msp \
+		-e CORE_PEER_ID=cli \
+		-e CORE_LOGGING_LEVEL=DEBUG \
+		-e CORE_PEER_ADDRESS=${P_PRN}.${P_ORG}.${P_DOM}:${P_PRP} \
+	cli /bin/bash -c "env | grep CORE; peer chaincode invoke -o ${P_ORN}.${P_ORG}.${P_DOM}:${P_ORP}  --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/${P_ORG}.${P_DOM}/orderers/${P_ORN}.${P_ORG}.${P_DOM}/msp/tlscacerts/tlsca.${P_ORG}.${P_DOM}-cert.pem -C $FFS_CHANNEL_NAME -n mycc -c '{\"Args\":[\"invoke\",\"a\",\"b\",\"${P_VAL}\"]}' "
+	RC=$?
+	if [[ .$RC. == .0. ]]; then	
+		echo -e "###=== Result : ${GRE}success${NOC} ===###"
+	else
+		echo -e "###=== Result : ${RED}failed${NOC}  ===###"
+		exit 1
+	fi
+}
+
+invokecc foo.com org1 orderer0 7050 =peer0 7051 PeerOrg1MSP 15
+result=$?
+
+
+if [[ .$result. == .0. ]]; then
+	if [[ .$FFS_WARN. == .0. ]]; then
+		echo -e "Final result: ${FFS_GRE}SUCCESS${FFS_NOC}"
+	else
+		echo -e "Final result: ${FFS_YEL}WARNINGS${FFS_NOC}"
+	fi
+else
+	echo -e "Final result: ${FFS_RED}FAILED${FFS_NOC}"
+fi
+
+exit $result 

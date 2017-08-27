@@ -1,0 +1,117 @@
+#!/bin/bash
+source ../confparams.sh
+result=0
+
+FFS_WARN=0
+
+echo
+echo -e "${FFS_YEL}############################################${FFS_NOC}"
+echo -e "${FFS_YEL} Query chaincode on single node             ${FFS_NOC}"
+echo -e "${FFS_BLU} Script :${FFS_NOC}" "$0"
+echo -e "${FFS_YEL}############################################${FFS_NOC}"
+echo "GOPATH          = "$GOPATH
+echo "FFS_ORGS        = "$FFS_ORGS
+echo "FFS_ORG_NODES   = "$FFS_ORG_NODES
+echo "FFS_DOMAIN      = "$FFS_DOMAIN
+
+
+function querycc() {
+	P_DOM=$1
+	P_ORG=$2
+	P_PRN=$3
+	P_PRP=$4
+	P_MSP=$5
+	P_KEY=$6
+	P_EXP=$7
+
+
+	echo
+	echo -e "${FFS_RED}--->>> Query CC on ${P_ORG} ${P_PRN} for P_KEY=\"${P_KEY}\" with expected VALUE=\"${P_EXP}\"  <<<---${FFS_NOC}"
+
+	if [[ .$P_KEY. == .. ]]; then
+		echo -e "${FFS_RED}ERR: missing argument 1 : P_KEY name ${FFS_NOC}"
+		exit 1
+	fi
+	if [[ .$P_EXP. == .. ]]; then
+		echo -e "${FFS_RED}ERR: missing argument 2 : P_EXP value ${FFS_NOC}"
+		exit 1
+	fi
+	echo -e "${FFS_BLU}### attempting to execute :${FFS_YEL} peer chaincode query -C $FFS_CHANNEL_NAME -n mycc -c '{\"Args\":[\"query\",\"${P_KEY}\"]}' ${FFS_NOC}"
+
+	local continuecheck=1
+	local starttime=$(date +%s)
+
+	# continue to query
+	# we either get a successful response, or reach TIMEOUT
+	while test "$(($(date +%s)-starttime))" -lt "$FFS_TIMEOUT" -a $continuecheck -ne 0; do
+		echo "Attempting to query CC for P_KEY=$P_KEY ... $(($(date +%s)-starttime)) secs"
+		docker exec -ti \
+			-e GOPATH=/opt/gopath \
+			-e CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/${P_ORG}.${P_DOM}/peers/${P_PRN}.${P_ORG}.${P_DOM}/tls/ca.crt \
+			-e CORE_PEER_TLS_P_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/${P_ORG}.${P_DOM}/peers/${P_PRN}.${P_ORG}.${P_DOM}/tls/server.key \
+			-e CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/${P_ORG}.${P_DOM}/peers/${P_PRN}.${P_ORG}.${P_DOM}/tls/server.crt \
+			-e CORE_PEER_TLS_ENABLED=true \
+			-e CORE_PEER_LOCALMSPID=${P_MSP} \
+			-e CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock \
+			-e CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/${P_ORG}.${P_DOM}/users/Admin@${P_ORG}.${P_DOM}/msp \
+			-e CORE_PEER_ID=cli \
+			-e CORE_LOGGING_LEVEL=DEBUG \
+			-e CORE_PEER_ADDRESS=${P_PRN}.${P_ORG}.${P_DOM}:${P_PRP} \
+		cli /bin/bash -c "env | grep CORE; peer chaincode query -C $FFS_CHANNEL_NAME -n mycc -c '{\"Args\":[\"query\",\"${P_KEY}\"]}' " >&log.txt
+		RC=$?
+		if [[ .$RC. == .0. ]]; then	
+			VALUE=$(strings log.txt | grep "^Query Result:" | awk '{print $3}')
+			let continuecheck=0
+		else
+			sleep 3
+		fi
+	done
+
+	cat log.txt; rm log.txt	
+
+	echo "### Chaincode containers :"
+	docker ps -a --filter name="dev-" --format 'table {{.Names}}\t{{.Status}}'
+	echo "##########################"
+
+	if [[ .$continuecheck. == .0. ]]; then
+		if [[ .$VALUE. == .$P_EXP. ]]; then
+			echo -e "###=== Result : ${FFS_GRE}success : returned=$VALUE expected=$P_EXP ${FFS_NOC} ===###"
+		else
+			echo -e "###=== Result : ${FFS_YEL}warning : returned=$VALUE expected=$P_EXP ${FFS_NOC} ===###"
+			(( FFS_WARN = FFS_WARN + 1 ))
+		fi
+	else
+		echo -e "###=== Result : ${FFS_RED}failed${FFS_NOC}  ===###"
+		return 1
+	fi
+	return 0
+}
+
+echo "#### asking for a value"
+querycc foo.com org1 peer0 7051 PeerOrg1MSP "a" 85; (( result = result + $? ))
+querycc foo.com org1 peer1 7051 PeerOrg1MSP "a" 85; (( result = result + $? ))
+querycc foo.com org2 peer0 7051 PeerOrg2MSP "a" 85; (( result = result + $? ))
+querycc foo.com org2 peer1 7051 PeerOrg2MSP "a" 85; (( result = result + $? ))
+querycc foo.com org3 peer0 7051 PeerOrg3MSP "a" 85; (( result = result + $? ))
+querycc foo.com org3 peer1 7051 PeerOrg3MSP "a" 85; (( result = result + $? ))
+
+echo "#### asking for b value"
+querycc foo.com org1 peer0 7051 PeerOrg1MSP "b" 215; (( result = result + $? ))
+querycc foo.com org1 peer1 7051 PeerOrg1MSP "b" 215; (( result = result + $? ))
+querycc foo.com org2 peer0 7051 PeerOrg2MSP "b" 215; (( result = result + $? ))
+querycc foo.com org2 peer1 7051 PeerOrg2MSP "b" 215; (( result = result + $? ))
+querycc foo.com org3 peer0 7051 PeerOrg3MSP "b" 215; (( result = result + $? ))
+querycc foo.com org3 peer1 7051 PeerOrg3MSP "b" 215; (( result = result + $? ))
+
+
+if [[ .$result. == .0. ]]; then
+	if [[ .$FFS_WARN. == .0. ]]; then
+		echo -e "Final result: ${FFS_GRE}SUCCESS${FFS_NOC}"
+	else
+		echo -e "Final result: ${FFS_YEL}WARNINGS${FFS_NOC}"
+	fi
+else
+	echo -e "Final result: ${FFS_RED}FAILED${FFS_NOC}"
+fi
+
+exit $result 

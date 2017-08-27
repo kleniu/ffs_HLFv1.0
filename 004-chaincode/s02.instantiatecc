@@ -27,16 +27,6 @@ function instantiatecc() {
 	echo -e "${FFS_RED}--->>> Instantiate CC on ${P_ORG} ${P_PRN}  <<<---${FFS_NOC}"
 	echo -e "${FFS_BLU}### attempting to execute :${YEL} peer chaincode instantiate -o ${P_ORN}.${P_ORG}.${P_DOM}:${P_ORP} --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/${P_ORG}.${P_DOM}/orderers/${P_ORN}.${P_ORG}.${P_DOM}/msp/tlscacerts/tlsca.${P_ORG}.${P_DOM}-cert.pem -C $FFS_CHANNEL_NAME -n mycc -v 1.0 -c '{\"Args\":[\"init\",\"a\",\"100\",\"b\",\"200\"]}' -P \"OR ('PeerOrg1MSP.member','PeerOrg2MSP.member','PeerOrg3MSP.member)\" ${FFS_NOC}"
 
-	#### ERROR
-	# CORE_VM_DOCKER_TLS_ENABLED 
-	# CORE_VM_DOCKER_TLS_KEY
-	# docker logs dev-peer0.org1.foo.com-mycc-1.0
-	# flag provided but not defined: -key
-	# Usage of chaincode:
-	#   -peer.address string
-	#     	peer address
-	# CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=ffsnet_default 
-
 
 	docker exec -ti \
 	-e GOPATH=/opt/gopath \
