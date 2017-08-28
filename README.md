@@ -16,6 +16,8 @@ sudo apt-get install curl
 curl -O https://hyperledger.github.io/composer/prereqs-ubuntu.sh
 chmod u+x prereqs-ubuntu.sh
 sudo ./prereqs-ubuntu.sh
+sudo usermod -aG docker ${USER}
+sudo shutdown -r now
 ```
 
 # Steps required to setup and run fabric from scratch
