@@ -1,11 +1,12 @@
 # ffs_HLFv1.0
-Fabric from scratch
+Fabric from scratch.
+
 Following scripts will compile, prepare required docker images and setup example fabric network. The Fabric consists of:
 - three zookeeper containers
 - four kafka containers
 - three organisations (org1, org2, org3) each org have:
-* two orderers (6 in total)
-* two peers (also 6 in total) 
+	* two orderers (6 in total)
+	* two peers (also 6 in total) 
 
 # Prepare your linux box
 If you are running Ubuntu do following steps
