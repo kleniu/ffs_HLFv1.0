@@ -57,6 +57,7 @@ docker exec cli /bin/bash -c "ls -l /opt/gopath/src/github.com/hyperledger/fabri
 echo "####"
 
 echo "#### coping $FFS_CHANNEL_NAME.block file to local filesystem "
+test -d ./logs || mkdir logs
 docker cp cli:/opt/gopath/src/github.com/hyperledger/fabric/peer/$FFS_CHANNEL_NAME.block ./logs/$FFS_CHANNEL_NAME.block-aftercrch
 (( result = result + $? ))
 md5sum ./logs/$FFS_CHANNEL_NAME.block-aftercrch | tee ./logs/$FFS_CHANNEL_NAME.block-aftercrch.md5
