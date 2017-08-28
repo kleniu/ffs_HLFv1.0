@@ -1,5 +1,5 @@
 # ffs_HLFv1.0
-Fabric from scratch.
+Fabric From Scratch (FFS).
 
 Following scripts will compile, prepare required docker images and setup example fabric network. The Fabric consists of:
 - three zookeeper containers
