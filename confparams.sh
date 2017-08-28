@@ -2,6 +2,8 @@
 # project root directory - you MUST change it
 FFS_ROOT=/home/hlfd/LABS/ffs_HLFv1.0
 
+############################ DO NOT UPDATE ANYTHING BELOW ############################
+### You should play with these parameters only if you know what you are doing.
 ## variables used for crypto material generation
 # number of organisations
 FFS_ORGS=3
@@ -13,8 +15,6 @@ FFS_DOMAIN=foo.com
 # name of the channel to be created
 FFS_CHANNEL_NAME=testchannel
 
-############################ DO NOT UPDATE ANYTHING BELOW ############################
-### You should play with these parameters only if you know what you are doing.
 # timeout used by chaincode query 
 FFS_TIMEOUT=30
 # GOPATH
