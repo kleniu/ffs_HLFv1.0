@@ -11,9 +11,11 @@ Following scripts will compile, prepare required docker images and setup example
 # Prepare your linux box
 If you are running Ubuntu do following steps
 ```
+sudo apt-get install software-properties-common
+sudo apt-get install curl
 curl -O https://hyperledger.github.io/composer/prereqs-ubuntu.sh
 chmod u+x prereqs-ubuntu.sh
-./prereqs-ubuntu.sh
+sudo ./prereqs-ubuntu.sh
 ```
 
 # Steps required to setup and run fabric from scratch
