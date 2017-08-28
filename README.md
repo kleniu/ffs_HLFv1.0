@@ -26,6 +26,7 @@ follow steps described below:
 git clone https://github.com/kleniu/ffs_HLFv1.0.git
 cd ffs_HLFv1.0/
 ```
+IMPORTANT! change the FFS_ROOT=/home/hlfd/LABS/ffs_HLFv1.0 variable in confparams.sh file
 
 ## compiling
 ```
