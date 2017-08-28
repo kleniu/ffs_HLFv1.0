@@ -18,7 +18,7 @@ FFS_CHANNEL_NAME=testchannel
 # timeout used by chaincode query 
 FFS_TIMEOUT=30
 # GOPATH
-GOPATH=${FFS_ROOT}/000-makebins/GOPATH
+export GOPATH=${FFS_ROOT}/000-makebins/GOPATH
 # fabric bin dir
 FFS_FABRIC_BIN=${FFS_ROOT}/000-makebins/bin
 # fabric source dir
