@@ -2,7 +2,5 @@
 */*.bna
 logs
 */composer-logs
-*/GOPATH
-*/bin
 001-generateArtifacts/artifacts
 001-generateArtifacts/crypto-config

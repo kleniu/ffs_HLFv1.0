@@ -32,7 +32,7 @@ function invokecc() {
 		echo -e "${RED}ERR: missing argument 1 : VALUE ${NOC}"
 		exit
 	fi
-	echo -e "${BLU}### attempting to execute :${YEL} peer chaincode invoke -o ${P_ORN}.${P_ORG}.${P_DOM}:${P_ORP}  --tls  --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/${P_ORG}.${P_DOM}/orderers/${P_ORN}.${P_ORG}.${P_DOM}/msp/tlscacerts/tlsca.${P_ORG}.${P_DOM}-cert.pem -C $FFS_CHANNEL_NAME -n mycc -c '{\"Args\":[\"invoke\",\"a\",\"b\",\"${P_VAL}\"]}' ${NOC}"
+	echo -e "${FFS_BLU}### attempting to execute :${FFS_YEL} peer chaincode invoke -o ${P_ORN}.${P_ORG}.${P_DOM}:${P_ORP}  --tls  --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/${P_ORG}.${P_DOM}/orderers/${P_ORN}.${P_ORG}.${P_DOM}/msp/tlscacerts/tlsca.${P_ORG}.${P_DOM}-cert.pem -C $FFS_CHANNEL_NAME -n mycc -c '{\"Args\":[\"invoke\",\"a\",\"b\",\"${P_VAL}\"]}' ${FFS_NOC}"
 	docker exec -ti \
 		-e GOPATH=/opt/gopath \
 		-e CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/${P_ORG}.${P_DOM}/peers/${P_PRN}.${P_ORG}.${P_DOM}/tls/ca.crt \

@@ -11,6 +11,8 @@ echo -e "${FFS_YEL}###########################################################${
 echo "GOPATH           = "$GOPATH
 echo "FFS_CHANNEL_NAME = "$FFS_CHANNEL_NAME
 
+export FABRIC_CFG_PATH=$PWD
+
 echo -e "attempting to run: ${FFS_BLU} $FFS_FABRIC_BIN/configtxgen -profile Channel -outputCreateChannelTx ./artifacts/channel.tx -channelID $FFS_CHANNEL_NAME ${FFS_NOC}"
 $FFS_FABRIC_BIN/configtxgen -profile Channel -outputCreateChannelTx ./artifacts/channel.tx -channelID $FFS_CHANNEL_NAME
 

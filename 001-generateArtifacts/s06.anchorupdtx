@@ -12,14 +12,14 @@ echo "GOPATH         = "$GOPATH
 echo "FFS_CHANNEL_NAME = "$FFS_CHANNEL_NAME
 echo "FFS_ORGS         = "$FFS_ORGS
 
-
+export FABRIC_CFG_PATH=$PWD
 i=1
 while [[ $i -le $FFS_ORGS ]]; do
 	ORG=PeerOrg${i}MSP
 	echo -e "attempting to run: ${FFS_BLU} $FFS_FABRIC_BIN/configtxgen -profile Channel -outputAnchorPeersUpdate ./artifacts/${ORG}anchor.tx -channelID $FFS_CHANNEL_NAME -asOrg ${ORG} ${FFS_NOC}"
 	$FFS_FABRIC_BIN/configtxgen -profile Channel -outputAnchorPeersUpdate ./artifacts/${ORG}anchor.tx -channelID $FFS_CHANNEL_NAME -asOrg ${ORG}
-	echo "check ..."
-	$FFS_FABRIC_BIN/configtxgen -profile Channel -inspectChannelCreateTx ./artifacts/${ORG}anchor.tx > ./logs/${ORG}anchor.tx.json 
+	#echo "check ..."
+	#$FFS_FABRIC_BIN/configtxgen -profile Channel -inspectChannelCreateTx ./artifacts/${ORG}anchor.tx > ./logs/${ORG}anchor.tx.json 
 	echo "size ..."
 	ls -la ./artifacts/${ORG}anchor.tx
 	echo "checksum ..."

@@ -1,3 +1,0 @@
-rm -rf ./Admin@org1.foo.com
-rm -rf ~/.composer-connection-profiles
-rm -rf ~/.composer-credentials

@@ -23,7 +23,7 @@ function anchorupdatech() {
 	P_MSP=$7
 
 	echo
-	echo -e "${FFS_RED}--->>> Updating channel $CHANNEL_NAME anchor Peer0 for Org1  <<<---${FFS_NOC}"
+	echo -e "${FFS_RED}--->>> Updating channel $CHANNEL_NAME anchor ${P_PRN} for ${P_ORG}  <<<---${FFS_NOC}"
 	echo -e "${FFS_BLU}### attempting to execute :${YEL} peer channel update -o ${P_ORN}.${P_ORG}.${P_DOM}:${P_ORP} -c $CHANNEL_NAME -f ./channel-artifacts/${P_MSP}anchor.tx --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/${P_ORG}.${P_DOM}/orderers/${P_ORN}.${P_ORG}.${P_DOM}/msp/tlscacerts/tlsca.${P_ORG}.${P_DOM}-cert.pem ${FFS_NOC}"
 	docker exec -ti \
 	-e GOPATH=/opt/gopath \
@@ -48,9 +48,9 @@ function anchorupdatech() {
 	return 0
 }
 
-anchorupdatech foo.com org1 peer0 7051 orderer0 7050 PeerOrg1MSP; (( result = result + $? ))
-anchorupdatech foo.com org2 peer0 7051 orderer0 7050 PeerOrg2MSP; (( result = result + $? ))
-anchorupdatech foo.com org3 peer0 7051 orderer0 7050 PeerOrg3MSP; (( result = result + $? ))
+anchorupdatech foo.com org1 peer0 7051 orderer0 7050 PeerOrg1MSP; (( result = result + $? )); sleep 2
+anchorupdatech foo.com org2 peer0 7051 orderer0 7050 PeerOrg2MSP; (( result = result + $? )); sleep 2
+anchorupdatech foo.com org3 peer0 7051 orderer0 7050 PeerOrg3MSP; (( result = result + $? )); sleep 2
 
 if [[ .$result. == .0. ]]; then
 	echo -e "Final result: ${FFS_GRE}SUCCESS${FFS_NOC}"

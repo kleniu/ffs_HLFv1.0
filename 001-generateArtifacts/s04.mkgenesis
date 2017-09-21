@@ -17,6 +17,8 @@ echo "FFS_DOMAIN    = "$FFS_DOMAIN
 test -d ./artifacts || mkdir artifacts
 rm ./artifacts/* 2>/dev/null || true
 
+export FABRIC_CFG_PATH=$PWD
+
 echo -e "attempting to run: ${FFS_BLU} $FFS_FABRIC_BIN/configtxgen -profile OrdererGenesis -outputBlock ./artifacts/genesis.block ${FFS_NOC}"
 $FFS_FABRIC_BIN/configtxgen -profile OrdererGenesis -outputBlock ./artifacts/genesis.block
 
