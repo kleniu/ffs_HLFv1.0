@@ -1,0 +1,21 @@
+#!/bin/bash
+RP=`realpath $0`
+DRP=`dirname $RP`
+BASEDIR=`realpath $DRP/`
+
+export VERSION=1.0.2
+export ARCH=$(echo "$(uname -s|tr '[:upper:]' '[:lower:]'|sed 's/mingw64_nt.*/windows/')-$(uname -m | sed 's/x86_64/amd64/g')" | awk '{print tolower($0)}')
+MARCH=`uname -m`
+
+CURDIR=`pwd`
+cd $BASEDIR/bin
+echo "===> Downloading platform binaries"
+test -d ./.tmp || mkdir .tmp
+curl https://nexus.hyperledger.org/content/repositories/releases/org/hyperledger/fabric/hyperledger-fabric/${ARCH}-${VERSION}/hyperledger-fabric-${ARCH}-${VERSION}.tar.gz | tar xz -C ./.tmp
+mv .tmp/bin/configtxgen .
+mv .tmp/bin/configtxlator .
+mv .tmp/bin/cryptogen .
+mv .tmp/bin/orderer .
+mv .tmp/bin/peer .
+rm -rf ./.tmp
+cd $CURDIR
