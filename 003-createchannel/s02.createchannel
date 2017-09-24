@@ -19,7 +19,7 @@ function crch() {
 	ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/org1.foo.com/orderers/orderer0.org1.foo.com/msp/tlscacerts/tlsca.org1.foo.com-cert.pem
 	echo
 	echo -e "${RED}--->>> Creating channel <<<---${NOC}"
-	echo -e "${BLU}### attempting to execute :${YEL} peer channel create -o orderer.example.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/channel.tx --tls --cafile $ORDERER_CA ${NOC}"
+	echo -e "${BLU}### attempting to execute :${YEL} peer channel create -o orderer.example.com:7050 -c $CHANNEL_NAME -t 60 -f ./channel-artifacts/channel.tx --tls --cafile $ORDERER_CA ${NOC}"
 	docker exec -ti \
 	-e GOPATH=/opt/gopath \
 	-e CORE_PEER_LOCALMSPID=PeerOrg1MSP \
@@ -32,7 +32,7 @@ function crch() {
 	-e CORE_PEER_ID=cli \
 	-e CORE_LOGGING_LEVEL=DEBUG \
 	-e CORE_PEER_ADDRESS=peer0.org1.foo.com:7051 \
-		cli /bin/bash -c "env | grep CORE; peer channel create -o orderer0.org1.foo.com:7050 -c $FFS_CHANNEL_NAME -f ./channel-artifacts/channel.tx --tls --cafile $ORDERER_CA" 
+		cli /bin/bash -c "env | grep CORE; peer channel create -o orderer0.org1.foo.com:7050 -c $FFS_CHANNEL_NAME -t 60 -f ./channel-artifacts/channel.tx --tls --cafile $ORDERER_CA" 
 	RC=$?
 	if [[ .$RC. == .0. ]]; then
 		echo -e "###=== Result : ${GRE}success${NOC} ===###"
