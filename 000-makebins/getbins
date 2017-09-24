@@ -11,11 +11,12 @@ CURDIR=`pwd`
 cd $BASEDIR/bin
 echo "===> Downloading platform binaries"
 test -d ./.tmp || mkdir .tmp
+test -d ./bin || mkdir bin
 curl https://nexus.hyperledger.org/content/repositories/releases/org/hyperledger/fabric/hyperledger-fabric/${ARCH}-${VERSION}/hyperledger-fabric-${ARCH}-${VERSION}.tar.gz | tar xz -C ./.tmp
-mv .tmp/bin/configtxgen .
-mv .tmp/bin/configtxlator .
-mv .tmp/bin/cryptogen .
-mv .tmp/bin/orderer .
-mv .tmp/bin/peer .
+mv .tmp/bin/configtxgen bin/.
+mv .tmp/bin/configtxlator bin/.
+mv .tmp/bin/cryptogen bin/.
+mv .tmp/bin/orderer bin/.
+mv .tmp/bin/peer bin/.
 rm -rf ./.tmp
 cd $CURDIR
