@@ -13,8 +13,6 @@ If you are running Ubuntu do following steps
 ```
 sudo apt-get install software-properties-common
 sudo apt-get install curl
-sudo apt-get install golang-1.7-go
-echo 'export PATH=/usr/lib/go-1.7/bin/:$PATH' >> ~/.bashrc
 curl -O https://hyperledger.github.io/composer/prereqs-ubuntu.sh
 chmod u+x prereqs-ubuntu.sh
 sudo ./prereqs-ubuntu.sh
