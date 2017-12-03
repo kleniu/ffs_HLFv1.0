@@ -79,7 +79,5 @@ cd 004-chaincode/
 
 done :)
 
-https://ibm.box.com/s/3ihuuzosk3g84s80p0o8xdi6nibs00xi
-
 similar example with Composer
 https://github.com/kleniu/my-network_HLFv1.0_extsec.git
