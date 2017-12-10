@@ -13,6 +13,7 @@ rm -rf artifacts
 rm configtx.yaml
 rm -rf crypto-config
 rm crypto-config.yaml
+rm -rf logs/*
 set +x
 
 if [[ .$result. == .0. ]]; then

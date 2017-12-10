@@ -13,12 +13,25 @@ If you are running Ubuntu do following steps
 ```
 sudo apt-get install software-properties-common
 sudo apt-get install curl
-sudo apt-get install golang
+sudo add-apt-repository ppa:gophers/archive
+sudo apt update
+sudo apt-get install golang-1.9-go
+echo 'export PATH=/usr/lib/go-1.9/bin/:$PATH' >> ~/.bashrc
 curl -O https://hyperledger.github.io/composer/prereqs-ubuntu.sh
 chmod u+x prereqs-ubuntu.sh
 sudo ./prereqs-ubuntu.sh
 sudo usermod -aG docker ${USER}
 sudo shutdown -r now
+```
+
+# Build and test prereq
+```
+sudo apt install libtool libltdl-dev
+sudo apt install python-pip
+sudo pip install --upgrade pip
+sudo pip install behave nose docker-compose
+sudo pip install -I flask==0.10.1 python-dateutil==2.2 pytz==2014.3 pyyaml==3.10 couchdb==1.0 flask-cors==2.0.1 requests==2.4.3 pyOpenSSL==16.2.0 pysha3==1.0b1 grpcio==1.0.4
+sudo pip install urllib3 ndg-httpsclient pyasn1 ecdsa python-slugify grpcio-tools jinja2 b3j0f.aop six
 ```
 
 # Steps required to setup and run fabric from scratch
