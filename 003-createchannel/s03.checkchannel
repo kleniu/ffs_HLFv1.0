@@ -53,9 +53,9 @@ checkOSNAvailability() {
 	cat log.txt
 	rm log.txt
 	if [ .$continuecheck. == .0. ]; then
-		echo -e "###=== Result : ${FFS_GRE}success - channel ${FFS_CHANNEL_NAMME} exists on Orderer $P_ORN at org ${P_ORG}.${P_DOM}${FFS_NOC} ===###"
+		echo -e "###=== Result : ${FFS_GRE}success - channel ${FFS_CHANNEL_NAME} exists on Orderer $P_ORN at org ${P_ORG}.${P_DOM}${FFS_NOC} ===###"
 	else
-		echo -e "###=== Result : ${FFS_RED}failed - missing channel ${FFS_CHANNEL_NAMME} on Orderer $P_ORN at org ${P_ORG}.${P_DOM}  ${FFS_NOC}  ===###"
+		echo -e "###=== Result : ${FFS_RED}failed - missing channel ${FFS_CHANNEL_NAME} on Orderer $P_ORN at org ${P_ORG}.${P_DOM}  ${FFS_NOC}  ===###"
 		return 1
 	fi
 	return 0

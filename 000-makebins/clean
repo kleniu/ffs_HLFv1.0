@@ -1,4 +1,5 @@
 source ../confparams.sh
+source ../commonfun.sh
 
 result=0
 echo
@@ -9,6 +10,7 @@ echo -e "${FFS_YEL}############################################${FFS_NOC}"
 echo "GOPATH         = "$GOPATH
 echo "FFS_FABRIC_BIN = "$FFS_FABRIC_BIN
 
+_rmi
 # rm $GOPATH only if it is defined in current dir. We need to be careful when removing $GOPATH ;)
 DTR=`echo $GOPATH | sed "s!$PWD!.!g"`
 test -d $DTR &&            bash -c "echo Removing dir $DTR located in $PWD; rm -rf $DTR" 

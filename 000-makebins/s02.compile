@@ -38,7 +38,7 @@ ls -la $FFS_FABRIC_BIN/*
 echo "Containers (should be empty list)"
 docker ps -a
 
-echo "Images (should be empty list)"
+echo "Images"
 docker images
 
 exit $result 

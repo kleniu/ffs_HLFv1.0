@@ -1,6 +1,6 @@
 ### configuration variables
-# project root directory - you MUST change it
-FFS_ROOT=~/ffs_HLFv1.0
+# do not change following line
+FFS_ROOT=$(realpath `dirname $(realpath $0)`/..)
 
 ############################ DO NOT UPDATE ANYTHING BELOW ############################
 ### You should play with these parameters only if you know what you are doing.

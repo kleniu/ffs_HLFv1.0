@@ -14,8 +14,8 @@ echo "FFS_FABRIC_ROOT = "$FFS_FABRIC_ROOT
 
 CURDIR=$PWD
 cd $FFS_FABRIC_ROOT
-_rmi || true
-make docker-clean
+#_rmi || true
+# make docker-clean
 make docker
 cd $CURDIR
 

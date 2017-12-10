@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-source ../confparams.sh
+source `dirname $(realpath $0)`/../confparams.sh
 result=0
 
 echo
@@ -9,6 +9,7 @@ echo -e "${FFS_YEL} Cloning or just pulling Hyperledger fabric git repository ${
 echo -e "${FFS_BLU} Script :${FFS_NOC}" "$0"
 echo -e "${FFS_YEL}###########################################################${FFS_NOC}"
 echo "GOPATH            = "$GOPATH
+echo "FFS_ROOT          = "$FFS_ROOT
 echo "FFS_FABRIC_SOURCE = "$FFS_FABRIC_SOURCE
 echo "FFS_FABRIC_ROOT   = "$FFS_FABRIC_ROOT
 echo "FFS_FABRIC_GIT    = "$FFS_FABRIC_GIT
