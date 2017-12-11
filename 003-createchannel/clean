@@ -1,21 +1,18 @@
 #!/bin/bash
 cd `dirname $(realpath $0)`
-
 source ../confparams.sh
+
+set -e
 
 result=0
 echo
 echo -e "${FFS_YEL}###############################${FFS_NOC}"
-echo -e "${FFS_YEL} Cleaning all crypto artifacts ${FFS_NOC}"
+echo -e "${FFS_YEL} Cleaning channel creation logs${FFS_NOC}"
 echo -e "${FFS_BLU} Script :${FFS_NOC}" "$0"
 echo -e "${FFS_YEL}###############################${FFS_NOC}"
 echo "GOPATH         = "$GOPATH
 
-rm -rf artifacts
-rm configtx.yaml
-rm -rf crypto-config
-rm crypto-config.yaml
-rm -rf logs/*
+rm -rf logs/* || true
 
 if [[ .$result. == .0. ]]; then
         echo -e "Script result: ${FFS_GRE}SUCCESS${FFS_NOC}"

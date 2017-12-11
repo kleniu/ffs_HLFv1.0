@@ -1,3 +1,6 @@
+#!/bin/bash
+cd `dirname $(realpath $0)`
+
 source ../confparams.sh
 source ../commonfun.sh
 

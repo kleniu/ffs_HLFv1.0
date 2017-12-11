@@ -1,14 +1,8 @@
 #!/bin/bash
 cd `dirname $(realpath $0)`
-
 source ../confparams.sh
-
 result=0
-./s01.checkOSN; (( result = result + $? ))
-./s02.createchannel; (( result = result + $? ))
-./s03.checkchannel; (( result = result + $? ))
-./s04.joinchannel; (( result = result + $? ))
-./s05.anchorupdatech; (( result = result + $? ))
+./s01.createcontainers; (( result = result + $? ))
 
 if [[ .$result. == .0. ]]; then
         echo -e "Section result: ${FFS_GRE}SUCCESS${FFS_NOC}"

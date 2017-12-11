@@ -1,6 +1,6 @@
 ### configuration variables
 # do not change following line
-FFS_ROOT=$(realpath `dirname $(realpath $0)`/..)
+FFS_ROOT=$(realpath `dirname $(realpath $(basename $0) )`/..)
 
 ############################ DO NOT UPDATE ANYTHING BELOW ############################
 ### You should play with these parameters only if you know what you are doing.

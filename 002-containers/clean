@@ -1,7 +1,10 @@
-set -e
+#!/bin/bash
+cd `dirname $(realpath $0)`
+
 source ../commonfun.sh
 source ../confparams.sh
 
+set -e
 export COMPOSE_PROJECT_NAME=ffsnet
 
 echo

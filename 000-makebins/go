@@ -1,3 +1,6 @@
+#!/bin/bash
+cd `dirname $(realpath $0)`
+
 source ../confparams.sh
 result=0
 ./s01.getsource; (( result = result + $? ))

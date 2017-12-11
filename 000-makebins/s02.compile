@@ -18,7 +18,7 @@ echo "Removing existing containers and images ..."
 _rmc || true
 _rmi || true
 
-echo "Making release ..."
+echo "Making bins ..."
 CURDIR=$PWD
 cd $FFS_FABRIC_ROOT
 make dist-clean 

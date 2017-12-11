@@ -2,13 +2,13 @@
 cd `dirname $(realpath $0)`
 
 source ../confparams.sh
-
 result=0
-./s01.checkOSN; (( result = result + $? ))
-./s02.createchannel; (( result = result + $? ))
-./s03.checkchannel; (( result = result + $? ))
-./s04.joinchannel; (( result = result + $? ))
-./s05.anchorupdatech; (( result = result + $? ))
+./s01.installcc; (( result = result + $? ))
+./s02.instantiatecc; (( result = result + $? ))
+./s03.querycc; (( result = result + $? ))
+./s04.invokecc; (( result = result + $? ))
+sleep 5
+./s05.checkquerycc; (( result = result + $? ))
 
 if [[ .$result. == .0. ]]; then
         echo -e "Section result: ${FFS_GRE}SUCCESS${FFS_NOC}"
