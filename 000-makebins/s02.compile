@@ -9,7 +9,6 @@ echo -e "${FFS_YEL}####################${FFS_NOC}"
 echo -e "${FFS_YEL} Compiling binaries ${FFS_NOC}"
 echo -e "${FFS_BLU} Script :${FFS_NOC}" "$0"
 echo -e "${FFS_YEL}####################${FFS_NOC}"
-echo "GOPATH          = "$GOPATH
 echo "FFS_FABRIC_ROOT = "$FFS_FABRIC_ROOT
 echo "FFS_FABRIC_BIN  = "$FFS_FABRIC_BIN
 echo "FFS_FFS_OS_ARCH = "$FFS_OS_ARCH
@@ -18,6 +17,7 @@ echo "Removing existing containers and images ..."
 _rmc || true
 _rmi || true
 
+export GOPATH=${FFS_ROOT}/000-makebins/hlf-workspace
 echo "Making bins ..."
 CURDIR=$PWD
 cd $FFS_FABRIC_ROOT

@@ -9,13 +9,13 @@ echo -e "${FFS_YEL}###############################${FFS_NOC}"
 echo -e "${FFS_YEL} Making required docker images ${FFS_NOC}"
 echo -e "${FFS_BLU} Script :${FFS_NOC}" "$0"
 echo -e "${FFS_YEL}###############################${FFS_NOC}"
-echo "GOPATH          = "$GOPATH
 echo "FFS_FABRIC_ROOT = "$FFS_FABRIC_ROOT
 
+export GOPATH=${FFS_ROOT}/000-makebins/hlf-workspace
 CURDIR=$PWD
 cd $FFS_FABRIC_ROOT
 #_rmi || true
-# make docker-clean
+make docker-clean
 make docker
 cd $CURDIR
 

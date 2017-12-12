@@ -1,4 +1,4 @@
-### configuration variables
+## configuration variables
 # do not change following line
 FFS_ROOT=$(realpath `dirname $(realpath $(basename $0) )`/..)
 
@@ -18,11 +18,11 @@ FFS_CHANNEL_NAME=testchannel
 # timeout used by chaincode query 
 FFS_TIMEOUT=30
 # GOPATH
-export GOPATH=${FFS_ROOT}/000-makebins/GOPATH
+export GOPATH=${FFS_ROOT}/local-workspace
 # fabric bin dir
 FFS_FABRIC_BIN=${FFS_ROOT}/000-makebins/bin
 # fabric source dir
-FFS_FABRIC_SOURCE=$GOPATH/src/github.com/hyperledger
+FFS_FABRIC_SOURCE=${FFS_ROOT}/000-makebins/hlf-workspace/src/github.com/hyperledger
 # location of the project
 FFS_FABRIC_ROOT=${FFS_FABRIC_SOURCE}/fabric
 # location of the GIT repo. It's used for fetching source code

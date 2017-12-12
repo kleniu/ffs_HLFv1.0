@@ -14,9 +14,6 @@ echo "GOPATH         = "$GOPATH
 echo "FFS_FABRIC_BIN = "$FFS_FABRIC_BIN
 
 _rmi
-# rm $GOPATH only if it is defined in current dir. We need to be careful when removing $GOPATH ;)
-DTR=`echo $GOPATH | sed "s!$PWD!.!g"`
-test -d $DTR &&            bash -c "echo Removing dir $DTR located in $PWD; rm -rf $DTR" 
 
 test -d $FFS_FABRIC_BIN && bash -c "echo Removing $FFS_FABRIC_BIN; rm -rf $FFS_FABRIC_BIN"
 

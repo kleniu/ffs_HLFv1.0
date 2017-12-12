@@ -8,12 +8,12 @@ echo -e "${FFS_YEL}###########################################################${
 echo -e "${FFS_YEL} Cloning or just pulling Hyperledger fabric git repository ${FFS_NOC}"
 echo -e "${FFS_BLU} Script :${FFS_NOC}" "$0"
 echo -e "${FFS_YEL}###########################################################${FFS_NOC}"
-echo "GOPATH            = "$GOPATH
 echo "FFS_ROOT          = "$FFS_ROOT
 echo "FFS_FABRIC_SOURCE = "$FFS_FABRIC_SOURCE
 echo "FFS_FABRIC_ROOT   = "$FFS_FABRIC_ROOT
 echo "FFS_FABRIC_GIT    = "$FFS_FABRIC_GIT
 
+export GOPATH=${FFS_ROOT}/000-makebins/hlf-workspace
 test -d $FFS_FABRIC_SOURCE || mkdir -p $FFS_FABRIC_SOURCE
 cd $FFS_FABRIC_SOURCE
 if [ -d fabric ]; then
