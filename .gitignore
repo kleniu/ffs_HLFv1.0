@@ -3,6 +3,6 @@
 logs
 */composer-logs
 000-makebins/hlf-workspace/*
-000-makebins/bin/*
+000-makebins/bin
 001-generateArtifacts/artifacts
 001-generateArtifacts/crypto-config
