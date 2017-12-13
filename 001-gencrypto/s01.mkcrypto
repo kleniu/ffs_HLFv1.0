@@ -1,0 +1,29 @@
+#!/bin/bash
+cd `dirname $(realpath $0)`
+source ../confparams.sh
+
+result=0
+
+echo
+echo -e "${FFS_YEL}############################################${FFS_NOC}"
+echo -e "${FFS_YEL} Generating crypto material using config    ${FFS_NOC}"
+echo -e "${FFS_BLU} Script :${FFS_NOC}" "$0"
+echo -e "${FFS_YEL}############################################${FFS_NOC}"
+echo "FFS_FABRIC_BIN = "$FFS_FABRIC_BIN
+
+CRYPTOGEN="$FFS_FABRIC_BIN/cryptogen"
+
+for P in `ls crypto-config_*.yaml`; do
+	ORGNAME=`echo $P | sed 's/crypto-config_//' | sed 's/\.yaml//'`
+	echo -e "attempting to run: ${FFS_BLU}$CRYPTOGEN generate --config $P --output certs_$ORGNAME ${FFS_NOC}"
+	$CRYPTOGEN generate --config $P --output certs_$ORGNAME	
+	(( result = result + $? ))
+done
+
+if [[ .$result. == .0. ]]; then
+        echo -e "Script result: ${FFS_GRE}SUCCESS${FFS_NOC}"
+else
+        echo -e "Script result: ${FFS_RED}FAILED${FFS_NOC}"
+fi
+
+exit $result 

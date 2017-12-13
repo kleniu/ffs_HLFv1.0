@@ -1,8 +1,6 @@
 #!/bin/bash
-cd `dirname $(realpath $0)`
-
-source ../confparams.sh
-source ../commonfun.sh
+source `dirname $(realpath $0)`/../confparams.sh
+source `dirname $(realpath $0)`/../commonfun.sh
 
 result=0
 echo

@@ -1,7 +1,6 @@
 #!/bin/bash
-set -e
-source ../confparams.sh
-source ../commonfun.sh
+source `dirname $(realpath $0)`/../confparams.sh
+source `dirname $(realpath $0)`/../commonfun.sh
 result=0
 
 echo
@@ -14,15 +13,17 @@ echo "FFS_FABRIC_BIN  = "$FFS_FABRIC_BIN
 echo "FFS_FFS_OS_ARCH = "$FFS_OS_ARCH
 
 echo "Removing existing containers and images ..."
-_rmc || true
-_rmi || true
+_rmc 
+_rmi
 
 export GOPATH=${FFS_ROOT}/000-makebins/hlf-workspace
 echo "Making bins ..."
 CURDIR=$PWD
 cd $FFS_FABRIC_ROOT
 make dist-clean 
+(( result = result + $? ))
 make native
+(( result = result + $? ))
 cd $CURDIR
 
 test -d $FFS_FABRIC_BIN || mkdir $FFS_FABRIC_BIN

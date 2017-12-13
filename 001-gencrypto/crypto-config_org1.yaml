@@ -1,0 +1,33 @@
+OrdererOrgs:
+  - Name: org1
+    Domain: org1.pl 
+    CA:
+       Hostname: orderer-ca 
+       Country: PL
+       Province: Mazowiedzkie
+       Locality: Warszawa
+       OrganizationalUnit: Hyperledger Fabric org1
+    Specs:
+      - Hostname: orderer0
+        CommonName: orderer0.org1.pl
+      - Hostname: orderer1
+        CommonName: orderer1.org1.pl
+    Users:
+      Count: 0
+
+PeerOrgs:
+  - Name: org1 
+    Domain: org1.pl
+    CA:
+       Hostname: peer-ca
+       Country: PL
+       Province: Mazowiedzkie
+       Locality: Warszawa
+       OrganizationalUnit: Hyperledger Fabric org1
+    Specs:
+      - Hostname: peer0
+        CommonName: peer0.org1.pl
+      - Hostname: peer1
+        CommonName: peer1.org1.pl
+    Users:
+      Count: 1

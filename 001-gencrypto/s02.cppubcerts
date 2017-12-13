@@ -1,0 +1,35 @@
+#!/bin/bash
+cd `dirname $(realpath $0)`
+source ../confparams.sh
+
+result=0
+
+echo
+echo -e "${FFS_YEL}#####################################################${FFS_NOC}"
+echo -e "${FFS_YEL} Copying public certs required for channel creation  ${FFS_NOC}"
+echo -e "${FFS_BLU} Script :${FFS_NOC}" "$0"
+echo -e "${FFS_YEL}#####################################################${FFS_NOC}"
+
+test -d ./certs_pub || mkdir ./certs_pub
+
+echo -e "${FFS_BLU}"
+ls -d certs_*/*Organizations/*/msp; result=$?
+echo -e "${FFS_BLU} ${FFS_NOC}"
+
+if [[ .$result. == .0. ]]; then
+	for P in `ls -d certs_*/*Organizations/*/msp`; do
+		mkdir -p certs_pub/$P
+		(( result = result + $? ))
+		echo -e "attempting to run: ${FFS_BLU} cp -r $P certs_pub/$P ${FFS_NOC}"
+		cp -r $P certs_pub/$P 
+		(( result = result + $? ))
+	done
+fi
+
+if [[ .$result. == .0. ]]; then
+        echo -e "Script result: ${FFS_GRE}SUCCESS${FFS_NOC}"
+else
+        echo -e "Script result: ${FFS_RED}FAILED${FFS_NOC}"
+fi
+
+exit $result 

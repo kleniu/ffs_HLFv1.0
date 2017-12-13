@@ -1,5 +1,4 @@
 #!/bin/bash
-set -e
 source `dirname $(realpath $0)`/../confparams.sh
 result=0
 
@@ -19,9 +18,10 @@ cd $FFS_FABRIC_SOURCE
 if [ -d fabric ]; then
 	cd $FFS_FABRIC_ROOT
 	git pull
+	result = $?
 else
 	git clone $FFS_FABRIC_GIT
-	cd $FFS_FABRIC_ROOT 
+	result = $?
 fi
 
 if [[ .$result. == .0. ]]; then

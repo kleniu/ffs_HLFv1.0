@@ -1,7 +1,6 @@
 #!/bin/bash
-set -e
-source ../confparams.sh
-source ../commonfun.sh
+source `dirname $(realpath $0)`/../confparams.sh
+source `dirname $(realpath $0)`/../commonfun.sh
 result=0
 
 echo
@@ -16,7 +15,9 @@ CURDIR=$PWD
 cd $FFS_FABRIC_ROOT
 #_rmi || true
 make docker-clean
+(( result = result + $? ))
 make docker
+(( result = result + $? ))
 cd $CURDIR
 
 if [[ .$result. == .0. ]]; then

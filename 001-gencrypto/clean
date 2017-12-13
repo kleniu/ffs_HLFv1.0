@@ -1,0 +1,21 @@
+#!/bin/bash
+source `dirname $(realpath $0)`/../confparams.sh
+source `dirname $(realpath $0)`/../commonfun.sh
+result=0
+
+cd `dirname $(realpath $0)`
+
+result=0
+echo
+echo -e "${FFS_YEL}###############################${FFS_NOC}"
+echo -e "${FFS_YEL} Cleaning all crypto artifacts ${FFS_NOC}"
+echo -e "${FFS_BLU} Script :${FFS_NOC}" "$0"
+echo -e "${FFS_YEL}###############################${FFS_NOC}"
+
+rm -rf logs/*
+rm -rf certs*
+
+echo -e "Script result: ${FFS_GRE}SUCCESS${FFS_NOC}"
+
+exit $result
+
