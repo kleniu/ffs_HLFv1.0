@@ -10,6 +10,15 @@ Following scripts will compile, prepare required docker images and setup example
 
 # Prepare your linux box
 If you are running Ubuntu do following steps
+- edit /etc/default/locale and add following lines
+```
+LANG="en_US.UTF-8"
+LANGUAGE="en_US.UTF-8"
+LC_CTYPE="en_US.UTF-8"
+LC_ALL="en_US.UTF-8"
+LANG="en_US.UTF-8"
+```
+- install required soft
 ```
 sudo apt-get install software-properties-common
 sudo apt-get install curl
